@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "character_engine",
+  "version": "${version}",
+  "name": "CharacterEngine",
+  "description": "YOMI Hustle but cubes",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/character_engine/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.rosenoire.character_engine.common.CharacterEngine"
+    ],
+    "client": [
+      "dev.rosenoire.character_engine.client.CharacterEngineClient"
+    ],
+    "fabric-datagen": [
+      "dev.rosenoire.character_engine.data.CharacterEngineDataGenerator"
+    ]
+  },
+  "mixins": [
+    "character_engine.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
