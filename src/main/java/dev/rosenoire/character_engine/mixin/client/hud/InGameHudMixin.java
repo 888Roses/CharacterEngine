@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InGameHudMixin {
     /// Disables the rendering of the hotbar when in survival or adventure mode.
     @Inject(at = @At("HEAD"), method = "renderHotbar", cancellable = true)
-    private void characterEngine$DisableCharacter(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    private void characterEngine$DisableHotbarRendering(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         var client = MinecraftClient.getInstance();
         var player = client.player;
 
