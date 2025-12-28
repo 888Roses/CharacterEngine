@@ -1,6 +1,6 @@
 package dev.rosenoire.character_engine.common;
 
-import dev.rosenoire.character_engine.geode.Geode;
+import dev.rosenoire.geode.Geode;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 

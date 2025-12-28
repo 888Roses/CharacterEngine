@@ -6,6 +6,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 public class CharacterEngineDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
-        final var pack = fabricDataGenerator.createPack();
+        var pack = fabricDataGenerator.createPack();
     }
 }
