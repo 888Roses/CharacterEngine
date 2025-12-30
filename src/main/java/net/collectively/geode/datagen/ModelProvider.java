@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.TexturedModel;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,5 +42,9 @@ public abstract class ModelProvider extends FabricModelProvider {
 
     protected final Identifier uploadFactory(TexturedModel.Factory factory, Block block, String suffix) {
         return factory.upload(block, suffix, this.blockBuilder.modelCollector);
+    }
+
+    protected final void itemDefinition(Item item) {
+        itemBuilder.register(item);
     }
 }

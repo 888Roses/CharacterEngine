@@ -10,19 +10,28 @@
   "icon": "assets/character_engine/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "dev.rosenoire.character_engine.common.CharacterEngine"
+    "fabric-datagen": [
+      "dev.rosenoire.character_engine.data.CharacterEngineDataGenerator"
     ],
     "client": [
       "dev.rosenoire.character_engine.client.CharacterEngineClient"
     ],
-    "fabric-datagen": [
-      "dev.rosenoire.character_engine.data.CharacterEngineDataGenerator"
+    "main": [
+      "dev.rosenoire.character_engine.common.CharacterEngine"
+    ],
+    "cardinal-components-entity": [
+      "dev.rosenoire.character_engine.cca.ModEntityComponentIndex"
     ]
   },
   "mixins": [
     "character_engine.mixins.json"
   ],
+  "custom": {
+    "cardinal-components": [
+      "character_engine:item_manager",
+      "character_engine:player_actions"
+    ]
+  },
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",

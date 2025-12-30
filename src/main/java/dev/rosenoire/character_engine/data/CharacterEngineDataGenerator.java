@@ -7,5 +7,7 @@ public class CharacterEngineDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         var pack = fabricDataGenerator.createPack();
+        pack.addProvider(ModLanguageProvider::new);
+        pack.addProvider(ModModelProvider::new);
     }
 }
