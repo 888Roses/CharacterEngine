@@ -2,12 +2,18 @@ package dev.rosenoire.character_engine.client.animation;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.api.PlayerAnimationFactory;
+import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.enums.PlayState;
+import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
+import net.collectively.geode.core.math;
+import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.util.Identifier;
+
+import java.util.Optional;
 
 public interface ModAnimationControllerIndex {
     Identifier BLASTER__RIGHT_HAND = CharacterEngine.id("blaster__right_hand");
@@ -33,6 +39,12 @@ public interface ModAnimationControllerIndex {
                             true
                     ));
 
+                    controller.addModifierLast(new AdjustmentModifier(partName -> createPitchModifier(
+                            partName,
+                            controller,
+                            "right_arm"
+                    )));
+
                     return controller;
                 }
         );
@@ -56,8 +68,37 @@ public interface ModAnimationControllerIndex {
                             true
                     ));
 
+                    controller.addModifierLast(new AdjustmentModifier(partName -> createPitchModifier(
+                            partName,
+                            controller,
+                            "left_arm"
+                    )));
+
                     return controller;
                 }
         );
     }
+
+    private static Optional<AdjustmentModifier.PartModifier> createPitchModifier(
+            String partName,
+            PlayerAnimationController controller,
+            String targetPartName
+    ) {
+        if (!partName.equals(targetPartName)) {
+            return Optional.empty();
+        }
+
+        PlayerLikeEntity playerLikeEntity = controller.getAvatar();
+
+        if (playerLikeEntity == null) {
+            return Optional.empty();
+        }
+
+        float rotation = playerLikeEntity.getPitch() + 0;
+        return Optional.of(new AdjustmentModifier.PartModifier(
+                new Vec3f(math.deg2rad(rotation), 0, 0),
+                new Vec3f(0, 0, 0)
+        ));
+    }
+
 }

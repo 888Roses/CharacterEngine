@@ -604,6 +604,30 @@ public interface math {
         return Math.toRadians(deg);
     }
 
+    /**
+     * Converts an angle measured in radians to an approximately equivalent angle measured in degrees. The conversion
+     * from radians to degrees is generally inexact; users should <u>not</u> expect {@code cos(toRadians(90.0))} to
+     * exactly equal {@code 0.0}.
+     *
+     * @param rad An angle, in radians
+     * @return The measurement of the angle {@code rad} in degrees.
+     */
+    static float rad2deg(float rad) {
+        return (float) rad2deg((double) rad);
+    }
+
+    /**
+     * Converts an angle measured in degrees to an approximately equivalent angle measured in radians. The conversion
+     * from degrees to radians is generally inexact.
+     *
+     * @param deg An angle, in degrees
+     * @return The measurement of the angle {@code deg}
+     * in radians.
+     */
+    static float deg2rad(float deg) {
+        return (float) deg2rad((double) deg);
+    }
+
     // endregion
 
     /**

@@ -4,11 +4,15 @@ import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.animation.keyframe.event.builtin.AutoPlayingSoundKeyframeHandler;
 import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import com.zigythebird.playeranimcore.animation.Animation;
+import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import dev.rosenoire.character_engine.client.animation.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.common.index.ModAnimationIndex;
 import dev.rosenoire.character_engine.foundation.index.AnimationIndex;
+import dev.rosenoire.character_engine.foundation.item.TickingItem;
 import dev.rosenoire.character_engine.foundation.player.PlayerActions;
 import net.collectively.geode.core.math;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,8 +20,10 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
+
 @SuppressWarnings({"SameParameterValue", "unused"})
-public class BlasterItem extends Item {
+public class BlasterItem extends Item implements TickingItem {
     public BlasterItem(Settings settings) {
         super(settings);
     }
@@ -53,7 +59,7 @@ public class BlasterItem extends Item {
         }
     }
 
-    private static boolean ensurePlayerHoldingStack(PlayerEntity player, Hand hand) {
+    private static boolean ensurePlayerHoldingStack(PlayerLikeEntity player, Hand hand) {
         ItemStack stackInOffHand = player.getStackInHand(Hand.OFF_HAND);
 
         boolean isWeaponInMainHand = player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof BlasterItem;
@@ -100,18 +106,18 @@ public class BlasterItem extends Item {
         return hand == Hand.MAIN_HAND ? isWeaponInMainHand : isWeaponInOffHand;
     }
 
-    private static PlayerAnimationController playAnimation(PlayerEntity player, Hand hand, Identifier rightAnim, Identifier leftAnim) {
+    private static PlayerAnimationController playAnimation(PlayerLikeEntity player, Hand hand, Identifier rightAnim, Identifier leftAnim) {
         Identifier animationId = (hand == Hand.MAIN_HAND) == (player.getMainArm() == Arm.RIGHT) ? rightAnim : leftAnim;
         return playAnimationSafe(player, getAnimationControllerId(player, hand), animationId);
     }
 
-    private static Identifier getAnimationControllerId(PlayerEntity player, Hand hand) {
+    private static Identifier getAnimationControllerId(PlayerLikeEntity player, Hand hand) {
         return (hand == Hand.MAIN_HAND) == (player.getMainArm() == Arm.RIGHT)
                 ? ModAnimationControllerIndex.BLASTER__RIGHT_HAND
                 : ModAnimationControllerIndex.BLASTER__LEFT_HAND;
     }
 
-    private static PlayerAnimationController playAnimationSafe(PlayerEntity player, Identifier controllerId, Identifier animationId) {
+    private static PlayerAnimationController playAnimationSafe(PlayerLikeEntity player, Identifier controllerId, Identifier animationId) {
         PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(
                 player,
                 controllerId
@@ -122,5 +128,10 @@ public class BlasterItem extends Item {
         }
 
         return controller;
+    }
+
+    @Override
+    public void tickInHand(LivingEntity livingEntity, ItemStack itemStack, Hand hand) {
+        livingEntity.bodyYaw = livingEntity.headYaw;
     }
 }

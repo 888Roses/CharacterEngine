@@ -130,6 +130,21 @@
 					}
 				}
 			}
+		},
+		"blaster.right_arm.fire": {
+			"animation_length": 0.125,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"vector": [-90, 0, 0]
+					}
+				}
+			},
+			"sound_effects": {
+				"0.125": {
+					"effect": "shoot_1"
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2

@@ -29,7 +29,8 @@
   "custom": {
     "cardinal-components": [
       "character_engine:item_manager",
-      "character_engine:player_actions"
+      "character_engine:player_actions",
+      "character_engine:ticking_items"
     ]
   },
   "depends": {

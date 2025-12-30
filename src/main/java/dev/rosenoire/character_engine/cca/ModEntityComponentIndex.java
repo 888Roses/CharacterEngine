@@ -2,7 +2,9 @@ package dev.rosenoire.character_engine.cca;
 
 import dev.rosenoire.character_engine.cca.components.PlayerActionsComponent;
 import dev.rosenoire.character_engine.cca.components.PlayerItemManagerComponent;
+import dev.rosenoire.character_engine.cca.components.TickingItemComponent;
 import dev.rosenoire.character_engine.common.CharacterEngine;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
@@ -18,9 +20,14 @@ public class ModEntityComponentIndex implements EntityComponentInitializer {
             CharacterEngine.id("player_actions"), PlayerActionsComponent.class
     );
 
+    public static final ComponentKey<TickingItemComponent> TICKING_ITEM = ComponentRegistry.getOrCreate(
+            CharacterEngine.id("ticking_items"), TickingItemComponent.class
+    );
+
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, ITEM_MANAGER, PlayerItemManagerComponent::new);
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, ACTIONS, PlayerActionsComponent::new);
+        entityComponentFactoryRegistry.registerFor(LivingEntity.class, TICKING_ITEM, TickingItemComponent::new);
     }
 }
