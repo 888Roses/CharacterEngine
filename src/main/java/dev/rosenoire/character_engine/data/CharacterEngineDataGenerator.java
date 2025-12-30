@@ -9,5 +9,6 @@ public class CharacterEngineDataGenerator implements DataGeneratorEntrypoint {
         var pack = fabricDataGenerator.createPack();
         pack.addProvider(ModLanguageProvider::new);
         pack.addProvider(ModModelProvider::new);
+        pack.addProvider(ModSoundProvider::new);
     }
 }

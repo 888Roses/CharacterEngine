@@ -1,0 +1,8 @@
+{
+  "item.blaster.cock": {
+    "sounds": [
+      "character_engine:item/blaster/cock/cock_1"
+    ],
+    "subtitle": "subtitles.character_engine.item.blaster.cock"
+  }
+}

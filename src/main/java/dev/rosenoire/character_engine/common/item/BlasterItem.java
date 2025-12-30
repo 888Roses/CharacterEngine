@@ -1,6 +1,7 @@
 package dev.rosenoire.character_engine.common.item;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.animation.keyframe.event.builtin.AutoPlayingSoundKeyframeHandler;
 import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import com.zigythebird.playeranimcore.animation.Animation;
 import dev.rosenoire.character_engine.client.animation.ModAnimationControllerIndex;

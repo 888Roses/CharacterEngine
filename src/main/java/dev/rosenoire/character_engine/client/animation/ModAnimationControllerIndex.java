@@ -6,6 +6,7 @@ import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import dev.rosenoire.character_engine.common.CharacterEngine;
+import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
 import net.minecraft.util.Identifier;
 
 public interface ModAnimationControllerIndex {
@@ -22,12 +23,13 @@ public interface ModAnimationControllerIndex {
                             (i, j, k) -> PlayState.CONTINUE
                     );
 
+                    controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
                     controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
                     controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
                             true,
-                            false,
                             true,
-                            false,
+                            true,
+                            true,
                             true
                     ));
 
@@ -44,11 +46,12 @@ public interface ModAnimationControllerIndex {
                             (i, j, k) -> PlayState.CONTINUE
                     );
 
+                    controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
                     controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
                     controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
-                            false,
                             true,
-                            false,
+                            true,
+                            true,
                             true,
                             true
                     ));

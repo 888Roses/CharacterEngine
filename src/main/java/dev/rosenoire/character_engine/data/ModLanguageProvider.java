@@ -1,6 +1,7 @@
 package dev.rosenoire.character_engine.data;
 
 import dev.rosenoire.character_engine.common.index.ModItemIndex;
+import dev.rosenoire.character_engine.common.index.ModSounds;
 import net.collectively.geode.datagen.LanguageProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.registry.RegistryWrapper;
@@ -15,5 +16,6 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void generate() {
         item(ModItemIndex.BLASTER, "Blaster");
+        sound(ModSounds.BLASTER_COCK_1, "Blaster Drawn");
     }
 }
