@@ -3,92 +3,48 @@ package dev.rosenoire.character_engine.client.animation;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.api.PlayerAnimationFactory;
 import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
+import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
+import dev.rosenoire.character_engine.common.index.ModItemIndex;
 import dev.rosenoire.character_engine.foundation.animation.StandardParticleKeyframeHandler;
 import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
 import net.collectively.geode.core.math;
+import net.collectively.geode.mc.index.ItemIndex;
 import net.minecraft.entity.PlayerLikeEntity;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 
 public interface ModAnimationControllerIndex {
-    Identifier BLASTER__RIGHT_HAND = CharacterEngine.id("blaster__right_hand");
-    Identifier BLASTER__LEFT_HAND = CharacterEngine.id("blaster__left_hand");
+    Identifier BLASTER = CharacterEngine.id("blaster__right_hand");
+    Identifier BLASTER_MIRRORED = CharacterEngine.id("blaster__left_hand");
 
-    static void initialize() {
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                BLASTER__RIGHT_HAND,
-                1000,
-                player -> {
-                    PlayerAnimationController controller = new PlayerAnimationController(
-                            player,
-                            (i, j, k) -> PlayState.CONTINUE
-                    );
+    private static PlayerAnimationController createStandardPlayerAnimationController(PlayerLikeEntity playerLike, boolean isMirrored) {
+        PlayerAnimationController controller = new PlayerAnimationController(playerLike, (i, j, k) -> PlayState.CONTINUE);
 
-                    controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
-                    controller.setParticleKeyframeHandler(new StandardParticleKeyframeHandler());
-                    controller.registerPlayerAnimBone("muzzle_flash");
-                    controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-                    controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
-                            true,
-                            true,
-                            true,
-                            true,
-                            true
-                    ));
+        controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
+        controller.setParticleKeyframeHandler(new StandardParticleKeyframeHandler());
 
-                    controller.addModifierLast(new AdjustmentModifier(partName -> createPitchModifier(
-                            partName,
-                            controller,
-                            "right_arm"
-                    )));
+        controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+        controller.setFirstPersonConfiguration(new FirstPersonConfiguration(true, true, true, true, true));
 
-                    return controller;
-                }
-        );
+        controller.addModifierLast(new AdjustmentModifier(partName -> rotateWithPitch(partName, controller)));
 
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                BLASTER__LEFT_HAND,
-                1000,
-                player -> {
-                    PlayerAnimationController controller = new PlayerAnimationController(
-                            player,
-                            (i, j, k) -> PlayState.CONTINUE
-                    );
+        if (isMirrored) {
+            controller.addModifierLast(new MirrorModifier());
+        }
 
-                    controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
-                    controller.setParticleKeyframeHandler(new StandardParticleKeyframeHandler());
-                    controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-                    controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
-                            true,
-                            true,
-                            true,
-                            true,
-                            true
-                    ));
-
-                    controller.addModifierLast(new AdjustmentModifier(partName -> createPitchModifier(
-                            partName,
-                            controller,
-                            "left_arm"
-                    )));
-
-                    return controller;
-                }
-        );
+        return controller;
     }
 
-    private static Optional<AdjustmentModifier.PartModifier> createPitchModifier(
-            String partName,
-            PlayerAnimationController controller,
-            String targetPartName
-    ) {
-        if (!partName.equals(targetPartName)) {
+    @SuppressWarnings("SameParameterValue")
+    private static Optional<AdjustmentModifier.PartModifier> rotateWithPitch(String partName, PlayerAnimationController controller) {
+        if (!partName.equals("right_arm") && !partName.equals("left_arm")) {
             return Optional.empty();
         }
 
@@ -98,11 +54,26 @@ public interface ModAnimationControllerIndex {
             return Optional.empty();
         }
 
-        float rotation = playerLikeEntity.getPitch() + 0;
+        float pitch = math.deg2rad(playerLikeEntity.getPitch());
+        boolean hasGunInOtherHand = playerLikeEntity.getOffHandStack().isOf(ModItemIndex.BLASTER);
+        boolean isLeftHand = partName.equals("left_arm");
+        boolean shouldBeDivided = hasGunInOtherHand && ((isLeftHand && playerLikeEntity.getMainArm() == Arm.RIGHT) || (!isLeftHand && playerLikeEntity.getMainArm() == Arm.LEFT));
+
         return Optional.of(new AdjustmentModifier.PartModifier(
-                new Vec3f(math.deg2rad(rotation), 0, 0),
+                new Vec3f(pitch * (shouldBeDivided ? 0.5f : 1), 0, 0),
                 new Vec3f(0, 0, 0)
         ));
     }
 
+    static void initialize() {
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                BLASTER, 1000,
+                playerLike -> createStandardPlayerAnimationController(playerLike, false)
+        );
+
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                BLASTER_MIRRORED, 1000,
+                playerLike -> createStandardPlayerAnimationController(playerLike, true)
+        );
+    }
 }

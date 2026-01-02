@@ -199,7 +199,7 @@
 			"particle_effects": {
 				"0.0417": {
 					"effect": "character_engine:muzzle_flash",
-					"locator": "muzzle_flash"
+					"locator": "right_arm"
 				}
 			}
 		},

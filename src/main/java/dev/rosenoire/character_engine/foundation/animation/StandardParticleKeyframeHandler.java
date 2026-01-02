@@ -1,10 +1,13 @@
 package dev.rosenoire.character_engine.foundation.animation;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.animation.layered.modifier.MirrorIfLeftHandModifier;
 import com.zigythebird.playeranimcore.animation.AnimationController;
 import com.zigythebird.playeranimcore.animation.AnimationData;
 import com.zigythebird.playeranimcore.animation.keyframe.event.CustomKeyFrameEvents;
 import com.zigythebird.playeranimcore.animation.keyframe.event.data.ParticleKeyframeData;
+import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractModifier;
+import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
 import com.zigythebird.playeranimcore.event.EventResult;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
@@ -55,8 +58,18 @@ public class StandardParticleKeyframeHandler implements CustomKeyFrameEvents.Cus
                 World world = playerLike.getEntityWorld();
 
                 double3 position = new double3(-0.2, 0.01, 0.75);
+
+                var bone = animationController.getBone(particleKeyframeData.getLocator());
+                var e = animationController.get3DTransformRaw(bone);
+                for (var a : animationController.getModifiers()) {
+                    if (a instanceof MirrorModifier) {
+                        e = a.get3DTransform(bone);
+                        position = position.mul(-1, 1, 1);
+                    }
+                }
+
+                Vec3f parentPos = e.getPositionVector();
                 position = math.rotateVector(position, new double3(-playerLike.getPitch(), playerLike.getYaw(), 0).modify(math::deg2rad));
-                Vec3f parentPos = animationController.getBone(particleKeyframeData.getLocator()).getPositionVector();
                 double3 pos = new double3(parentPos.x(), parentPos.y(), parentPos.x()).add(position).add(playerLike.getEyePos());
 
                 WorldUtil.addParticleClient(world, simpleParticleType, pos, double3.zero);

@@ -5,9 +5,9 @@ import static dev.rosenoire.character_engine.foundation.index.AnimationIndex.*;
 import net.minecraft.util.Identifier;
 
 public interface ModAnimationIndex extends AnimationIndex {
-    Identifier BLASTER__RIGHT_ARM_IDLE = register("blaster.right_arm.idle");
-    Identifier BLASTER__RIGHT_ARM_DRAW = register("blaster.right_arm.draw");
-    Identifier BLASTER__RIGHT_ARM_FIRE = register("blaster.right_arm.fire");
+    Identifier BLASTER_IDLE = register("blaster.right_arm.idle");
+    Identifier BLASTER_DRAW = register("blaster.right_arm.draw");
+    Identifier BLASTER_FIRE = register("blaster.right_arm.fire");
     Identifier BLASTER__LEFT_ARM_IDLE = register("blaster.left_arm.idle");
     Identifier BLASTER__LEFT_ARM_DRAW = register("blaster.left_arm.draw");
     Identifier BLASTER__LEFT_ARM_FIRE = register("blaster.left_arm.fire");

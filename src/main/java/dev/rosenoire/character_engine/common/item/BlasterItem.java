@@ -31,12 +31,7 @@ public class BlasterItem extends Item implements TickingItem, AttackItem {
 
     public static void onHandStackChanged(PlayerEntity player, ItemStack previousStack, ItemStack itemStack, Hand hand) {
         if (ensurePlayerHoldingStack(player, hand)) {
-            PlayerAnimationController controller = playAnimationInHand(
-                    player,
-                    hand,
-                    ModAnimationIndex.BLASTER__RIGHT_ARM_DRAW,
-                    ModAnimationIndex.BLASTER__LEFT_ARM_DRAW
-            );
+            PlayerAnimationController controller = playAnimationInHand(player, hand, ModAnimationIndex.BLASTER_DRAW);
 
             if (controller != null) {
                 Animation currentAnimation = controller.getCurrentAnimationInstance();
@@ -60,12 +55,7 @@ public class BlasterItem extends Item implements TickingItem, AttackItem {
 
                         // This should not work. This in fact should have no reason to work. Why does this work? Idfk.
                         if (controller != null && (!controller.isActive() || controller.getAnimationTime() > 100f)) {
-                            playAnimationInHand(
-                                    player,
-                                    hand,
-                                    ModAnimationIndex.BLASTER__RIGHT_ARM_IDLE,
-                                    ModAnimationIndex.BLASTER__LEFT_ARM_IDLE
-                            );
+                            playAnimationInHand(player, hand, ModAnimationIndex.BLASTER_IDLE);
                         }
                     }
                 }
@@ -119,15 +109,14 @@ public class BlasterItem extends Item implements TickingItem, AttackItem {
         return hand == Hand.MAIN_HAND ? isWeaponInMainHand : isWeaponInOffHand;
     }
 
-    private static PlayerAnimationController playAnimationInHand(PlayerLikeEntity player, Hand hand, Identifier rightAnim, Identifier leftAnim) {
-        Identifier animationId = (hand == Hand.MAIN_HAND) == (player.getMainArm() == Arm.RIGHT) ? rightAnim : leftAnim;
-        return playAnimationSafe(player, getAnimationControllerId(player, hand), animationId);
+    private static PlayerAnimationController playAnimationInHand(PlayerLikeEntity player, Hand hand, Identifier rightAnim) {
+        return playAnimationSafe(player, getAnimationControllerId(player, hand), rightAnim);
     }
 
     private static Identifier getAnimationControllerId(PlayerLikeEntity player, Hand hand) {
         return (hand == Hand.MAIN_HAND) == (player.getMainArm() == Arm.RIGHT)
-                ? ModAnimationControllerIndex.BLASTER__RIGHT_HAND
-                : ModAnimationControllerIndex.BLASTER__LEFT_HAND;
+                ? ModAnimationControllerIndex.BLASTER
+                : ModAnimationControllerIndex.BLASTER_MIRRORED;
     }
 
     private static PlayerAnimationController playAnimationSafe(PlayerLikeEntity player, Identifier controllerId, Identifier animationId) {
@@ -157,12 +146,7 @@ public class BlasterItem extends Item implements TickingItem, AttackItem {
             boolean hasGunInOffHand = playerLikeEntity.getOffHandStack().isOf(ModItemIndex.BLASTER);
             Hand hand = !hasGunInOffHand ? Hand.MAIN_HAND : handSwitcher % 4 == 0 ? Hand.MAIN_HAND : Hand.OFF_HAND;
 
-            playAnimationInHand(
-                    playerLikeEntity,
-                    hand,
-                    ModAnimationIndex.BLASTER__RIGHT_ARM_FIRE,
-                    ModAnimationIndex.BLASTER__LEFT_ARM_FIRE
-            );
+            playAnimationInHand(playerLikeEntity, hand, ModAnimationIndex.BLASTER_FIRE);
 
             if (!hasGunInOffHand && handSwitcher % 4 != 0) handSwitcher += 1;
             handSwitcher += hasGunInOffHand ? 1 : 4;
