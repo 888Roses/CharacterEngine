@@ -7,6 +7,8 @@ import com.zigythebird.playeranimcore.animation.AnimationData;
 import com.zigythebird.playeranimcore.animation.keyframe.event.CustomKeyFrameEvents;
 import com.zigythebird.playeranimcore.animation.keyframe.event.data.SoundKeyframeData;
 import com.zigythebird.playeranimcore.event.EventResult;
+import dev.rosenoire.character_engine.common.CharacterEngine;
+import net.collectively.geode.Geode;
 import net.collectively.geode.core.math;
 import net.collectively.geode.mc.util.GeodeText;
 import net.minecraft.entity.PlayerLikeEntity;

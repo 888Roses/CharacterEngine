@@ -156,13 +156,6 @@ public class BlasterItem extends Item implements TickingItem, AttackItem {
 
             if (playerLikeEntity instanceof PlayerEntity player) {
                 enqueueIdleAnimationAfterTime(player, hand, 1f);
-
-                CameraShake.shake(
-                        player,
-                        2,
-                        0.005,
-                        CameraShakeComponent.EasingFunction.LINEAR
-                );
             }
         }
 

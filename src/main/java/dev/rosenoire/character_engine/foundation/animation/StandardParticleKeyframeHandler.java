@@ -123,66 +123,75 @@ public class StandardParticleKeyframeHandler implements CustomKeyFrameEvents.Cus
         if (animationController instanceof PlayerAnimationController playerController) {
             PlayerLikeEntity playerLike = playerController.getAvatar();
             World world = playerLike.getEntityWorld();
+            Random random = playerLike.getRandom();
 
-            String particleName = particleKeyframeData.getEffect();
-            Identifier particleIdentifier = Identifier.tryParse(particleName);
+            // ---- Transform JSON text into valid output. ----
+            String jsonText = particleKeyframeData.script();
+            jsonText = jsonText.replace("\\n", "").replace("\\\"", "\"");
+            // By default, for some reason, the script channel always ends with a semicolon ';', so we need to substring it out.
+            jsonText = jsonText.substring(0, jsonText.length() - 1);
 
-            if (particleIdentifier == null) {
-                CharacterEngine.LOGGER.error("Could not parse Identifier '{}'!", particleName);
+            // ---- Read and deserialize the JSON into particle data. ----
+            StringReader reader = new StringReader(jsonText);
+            JsonReader jsonReader = ParticleDataLoader.GSON.newJsonReader(reader);
+            jsonReader.setStrictness(Strictness.LENIENT);
+            ParticleData particleData = ParticleDataLoader.GSON.fromJson(jsonReader, TypeToken.get(ParticleData.class));
+
+            double3 locatorPosition = particleData.position();
+
+            String locatorElementName = particleKeyframeData.getLocator();
+            AdvancedPlayerAnimBone locatorBone = animationController.getBone(locatorElementName);
+
+            if (locatorBone == null) {
+                CharacterEngine.LOGGER.error("Could not find any bone named '{}' for particle locator: '{}'!", locatorElementName, particleKeyframeData.getLocator());
                 return EventResult.PASS;
             }
 
-            Optional<RegistryEntry.Reference<ParticleType<?>>> key = Registries.PARTICLE_TYPE.getEntry(particleIdentifier);
-
-            if (key.isEmpty()) {
-                CharacterEngine.LOGGER.error("ParticleType RegistryEntry Reference for Identifier '{}' is null!", particleIdentifier);
-                return EventResult.PASS;
+            var locatorElementTransform = animationController.get3DTransformRaw(locatorBone);
+            for (AbstractModifier abstractModifier : animationController.getModifiers()) {
+                if (abstractModifier instanceof MirrorModifier) {
+                    locatorElementTransform = abstractModifier.get3DTransform(locatorBone);
+                    locatorPosition = locatorPosition.mul(-1, 1, 1);
+                }
             }
 
-            ParticleType<?> particleType = key.get().value();
-            if (particleType instanceof SimpleParticleType simpleParticleType) {
-                // Transform JSON text into valid output.
-                String jsonText = particleKeyframeData.script();
-                jsonText = jsonText.replace("\\n", "").replace("\\\"", "\"");
-                // By default, for some reason, the script channel always ends with a semicolon ';', so we need to substring it out.
-                jsonText = jsonText.substring(0, jsonText.length() - 1);
-                CharacterEngine.LOGGER.info("Modified Script: {}", jsonText);
+            Vec3f locatorElementPosition = locatorElementTransform.getPositionVector();
+            locatorPosition = math.rotateVector(locatorPosition,
+                    new double3(-playerLike.getPitch(), playerLike.getYaw(), 0).modify(math::deg2rad)
+            );
 
-                // Read and deserialize the JSON into particle data.
-                StringReader reader = new StringReader(jsonText);
-                JsonReader jsonReader = ParticleDataLoader.GSON.newJsonReader(reader);
-                jsonReader.setStrictness(Strictness.LENIENT);
-                ParticleData particleData = ParticleDataLoader.GSON.fromJson(jsonReader, TypeToken.get(ParticleData.class));
+            double3 particlePosition = new double3(locatorElementPosition.x(), locatorElementPosition.y(), locatorElementPosition.x())
+                    .add(locatorPosition)
+                    .add(playerLike.getEyePos());
 
-                double3 locatorPosition = particleData.position();
-                Random random = playerLike.getRandom();
-
-                String locatorElementName = particleKeyframeData.getLocator();
-                AdvancedPlayerAnimBone locatorBone = animationController.getBone(locatorElementName);
-
-                if (locatorBone == null) {
-                    CharacterEngine.LOGGER.error("Could not find any bone named '{}' for particle locator: '{}'!", locatorElementName, particleKeyframeData.getLocator());
-                    return EventResult.PASS;
+            for (var i = 0; i < particleData.count(); i++) {
+                // ---- Handle multiple particle effects split by commas ----
+                Identifier identifier;
+                String packedIdentifiers = particleKeyframeData.getEffect().replace(" ", "");
+                String loggedIdentifier = packedIdentifiers;
+                if (packedIdentifiers.contains(",")) {
+                    String[] identifierStrings = packedIdentifiers.split(",");
+                    int randomIdentifierIndex = MathHelper.nextBetween(random, 0, identifierStrings.length - 1);
+                    identifier = Identifier.tryParse(identifierStrings[randomIdentifierIndex]);
+                    loggedIdentifier = identifierStrings[randomIdentifierIndex];
+                } else {
+                    identifier = Identifier.tryParse(packedIdentifiers);
                 }
 
-                var locatorElementTransform = animationController.get3DTransformRaw(locatorBone);
-                for (AbstractModifier abstractModifier : animationController.getModifiers()) {
-                    if (abstractModifier instanceof MirrorModifier) {
-                        locatorElementTransform = abstractModifier.get3DTransform(locatorBone);
-                        locatorPosition = locatorPosition.mul(-1, 1, 1);
-                    }
+                if (identifier == null) {
+                    CharacterEngine.LOGGER.error("Could not parse Identifier '{}'!", loggedIdentifier);
+                    continue;
                 }
 
-                Vec3f locatorElementPosition = locatorElementTransform.getPositionVector();
-                locatorPosition = math.rotateVector(locatorPosition,
-                        new double3(-playerLike.getPitch(), playerLike.getYaw(), 0).modify(math::deg2rad)
-                );
+                Optional<RegistryEntry.Reference<ParticleType<?>>> key = Registries.PARTICLE_TYPE.getEntry(identifier);
 
-                double3 particlePosition = new double3(locatorElementPosition.x(), locatorElementPosition.y(), locatorElementPosition.x())
-                        .add(locatorPosition)
-                        .add(playerLike.getEyePos());
+                if (key.isEmpty()) {
+                    CharacterEngine.LOGGER.error("ParticleType RegistryEntry Reference for Identifier '{}' is null!", identifier);
+                    continue;
+                }
 
-                for (var i = 0; i < particleData.count(); i++) {
+                ParticleType<?> particleType = key.get().value();
+                if (particleType instanceof SimpleParticleType simpleParticleType) {
                     WorldUtil.addParticleClient(
                             world,
                             simpleParticleType,
@@ -193,13 +202,13 @@ public class StandardParticleKeyframeHandler implements CustomKeyFrameEvents.Cus
                             ),
                             double3.zero
                     );
+                } else {
+                    CharacterEngine.LOGGER.warn("{} is not a SimpleParticleType! Only SimpleParticleType are currently supported.", particleType.getClass());
+                    continue;
                 }
 
                 return EventResult.SUCCESS;
             }
-
-            CharacterEngine.LOGGER.warn("{} is not a SimpleParticleType! Only SimpleParticleType are currently supported.", particleType.getClass());
-            return EventResult.PASS;
         }
 
         return EventResult.PASS;
