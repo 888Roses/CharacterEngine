@@ -6,6 +6,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -45,12 +46,14 @@ public record double3(double x, double y, double z) implements Position, Compara
     public double3(double x) {this(x,x,x);}
     public double3(Position xyz) {this(xyz.getX(),xyz.getY(),xyz.getZ());}
     public double3(BlockPos pos) {this(pos.getX(),pos.getY(),pos.getZ());}
+    public double3(Vector3f xyz) {this(xyz.x(),xyz.y(),xyz.z());}
     // endregion
 
     // region Conversions
 
     public Vec3d toVec3d() {return new Vec3d(x,y,z);}
     public BlockPos toBlockPos() {return BlockPos.ofFloored(this);}
+    public Vector3f toVec3f() {return new Vector3f((float)x,(float)y,(float)z);}
     public double3 modify(UnaryOperator<Double> modifier) {
         return new double3(modifier.apply(x), modifier.apply(y), modifier.apply(z));
     }
@@ -192,4 +195,8 @@ public record double3(double x, double y, double z) implements Position, Compara
     }
 
     // endregion
+
+    public String toPrettyString() {
+        return "[%s, %s, %s]".formatted(x,y,z);
+    }
 }

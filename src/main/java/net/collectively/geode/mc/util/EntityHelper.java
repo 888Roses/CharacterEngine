@@ -1,8 +1,10 @@
 package net.collectively.geode.mc.util;
 
+import net.collectively.geode.core.types.double2;
 import net.collectively.geode.core.types.double3;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +18,10 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("unused")
 public interface EntityHelper {
+    static double3 getForward(Entity entity) {
+        return new double3(entity.getRotationVector());
+    }
+
     /**
      * Gets and returns the position of the given {@link Entity} last tick.
      *
@@ -46,11 +52,11 @@ public interface EntityHelper {
     }
 
     static List<Entity> getEntitiesAround(Entity entity, float radius) {
-        return  getEntitiesAround(entity, radius, ent -> true);
+        return getEntitiesAround(entity, radius, ent -> true);
     }
 
     static List<Entity> getEntitiesAround(Entity entity, float radius, Predicate<Entity> check) {
-        return  getEntitiesAround(entity, entity.getEntityWorld(), new double3(entity.getEntityPos()), radius, ent -> true);
+        return getEntitiesAround(entity, entity.getEntityWorld(), new double3(entity.getEntityPos()), radius, ent -> true);
     }
 
     static List<Entity> getEntitiesAround(@Nullable Entity entity, World world, double3 point, float radius) {

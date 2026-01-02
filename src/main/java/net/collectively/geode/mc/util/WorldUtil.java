@@ -3,6 +3,8 @@ package net.collectively.geode.mc.util;
 import net.collectively.geode.core.types.double3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
@@ -11,6 +13,31 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public interface WorldUtil {
+    static void addParticleClient(
+            World world,
+            ParticleEffect effect,
+            double3 position,
+            double3 velocity,
+            int count
+    ) {
+        for (int i = 0; i < count; i++) {
+            world.addParticleClient(
+                    effect,
+                    position.x(), position.y(), position.z(),
+                    velocity.x(), velocity.y(), velocity.z()
+            );
+        }
+    }
+
+    static void addParticleClient(
+            World world,
+            ParticleEffect effect,
+            double3 position,
+            double3 velocity
+    ) {
+        addParticleClient(world, effect, position, velocity, 1);
+    }
+
     static void createExplosion(Entity entity, float power, World.ExplosionSourceType type) {
         createExplosion(entity.getEntityWorld(), entity, new double3(entity.getEntityPos()), power, type);
     }

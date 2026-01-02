@@ -31,7 +31,8 @@
       "character_engine:item_manager",
       "character_engine:player_actions",
       "character_engine:ticking_items",
-      "character_engine:player_fov"
+      "character_engine:player_fov",
+      "character_engine:camera_shake"
     ]
   },
   "depends": {

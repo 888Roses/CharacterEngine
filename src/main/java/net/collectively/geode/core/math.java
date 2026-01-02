@@ -785,4 +785,16 @@ public interface math {
     static double atan(double a) {
         return StrictMath.atan(a); // default impl. delegates to StrictMath
     }
+
+    /**
+     * Rotates a vector by an angle.
+     *
+     * @param v   The vector to rotate.
+     * @param rot The rotation vector where X is the pitch, Y the yaw and Z the roll.
+     * @return The rotated vector.
+     * @implNote Please note that radians are expected for the rotation.
+     */
+    static double3 rotateVector(double3 v, double3 rot) {
+        return new double3(math.eulerRotation(rot).transformInverse(v.toVec3f()));
+    }
 }

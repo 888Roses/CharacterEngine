@@ -8,6 +8,7 @@ import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
+import dev.rosenoire.character_engine.foundation.animation.StandardParticleKeyframeHandler;
 import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
 import net.collectively.geode.core.math;
 import net.minecraft.entity.PlayerLikeEntity;
@@ -30,6 +31,8 @@ public interface ModAnimationControllerIndex {
                     );
 
                     controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
+                    controller.setParticleKeyframeHandler(new StandardParticleKeyframeHandler());
+                    controller.registerPlayerAnimBone("muzzle_flash");
                     controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
                     controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
                             true,
@@ -59,6 +62,7 @@ public interface ModAnimationControllerIndex {
                     );
 
                     controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
+                    controller.setParticleKeyframeHandler(new StandardParticleKeyframeHandler());
                     controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
                     controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
                             true,
