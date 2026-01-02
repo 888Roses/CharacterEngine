@@ -1,5 +1,6 @@
 {
   "item.character_engine.blaster": "Blaster",
   "options.slider_value": "%s: %s",
-  "subtitles.character_engine.item.blaster.cock": "Blaster Drawn"
+  "subtitles.character_engine.item.blaster.cock": "Blaster Drawn",
+  "subtitles.character_engine.item.blaster.shoot": "Blaster Shot"
 }

@@ -1,13 +1,12 @@
 package dev.rosenoire.character_engine.common.item;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranim.animation.keyframe.event.builtin.AutoPlayingSoundKeyframeHandler;
 import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import com.zigythebird.playeranimcore.animation.Animation;
-import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import dev.rosenoire.character_engine.client.animation.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.common.index.ModAnimationIndex;
 import dev.rosenoire.character_engine.foundation.index.AnimationIndex;
+import dev.rosenoire.character_engine.foundation.item.AttackItem;
 import dev.rosenoire.character_engine.foundation.item.TickingItem;
 import dev.rosenoire.character_engine.foundation.player.PlayerActions;
 import net.collectively.geode.core.math;
@@ -20,10 +19,8 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
-import java.util.Optional;
-
 @SuppressWarnings({"SameParameterValue", "unused"})
-public class BlasterItem extends Item implements TickingItem {
+public class BlasterItem extends Item implements TickingItem, AttackItem {
     public BlasterItem(Settings settings) {
         super(settings);
     }
@@ -40,23 +37,35 @@ public class BlasterItem extends Item implements TickingItem {
             if (controller != null) {
                 Animation currentAnimation = controller.getCurrentAnimationInstance();
                 if (currentAnimation != null) {
-                    PlayerActions.enqueue(
-                            player,
-                            math.round(0.46f * 20f),
-                            () -> {
-                                if (ensurePlayerHoldingStack(player, hand)) {
-                                    playAnimation(
-                                            player,
-                                            hand,
-                                            ModAnimationIndex.BLASTER__RIGHT_ARM_IDLE,
-                                            ModAnimationIndex.BLASTER__LEFT_ARM_IDLE
-                                    );
-                                }
-                            }
-                    );
+                    playIdleAnimationAfter(player, hand, 0.45f);
                 }
             }
         }
+    }
+
+    private static void playIdleAnimationAfter(PlayerEntity player, Hand hand, float currentAnimationLength) {
+        PlayerActions.enqueue(
+                player,
+                math.ceil(currentAnimationLength * 20f),
+                () -> {
+                    if (ensurePlayerHoldingStack(player, hand)) {
+                        PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(
+                                player,
+                                getAnimationControllerId(player, hand)
+                        );
+
+                        // This should not work. This in fact should have no reason to work. Why does this work? Idfk.
+                        if (controller != null && (!controller.isActive() || controller.getAnimationTime() > 100f)) {
+                            playAnimation(
+                                    player,
+                                    hand,
+                                    ModAnimationIndex.BLASTER__RIGHT_ARM_IDLE,
+                                    ModAnimationIndex.BLASTER__LEFT_ARM_IDLE
+                            );
+                        }
+                    }
+                }
+        );
     }
 
     private static boolean ensurePlayerHoldingStack(PlayerLikeEntity player, Hand hand) {
@@ -133,5 +142,29 @@ public class BlasterItem extends Item implements TickingItem {
     @Override
     public void tickInHand(LivingEntity livingEntity, ItemStack itemStack, Hand hand) {
         livingEntity.bodyYaw = livingEntity.headYaw;
+    }
+
+    // TODO: Bad kitten!
+    private static int switcher = 0;
+
+    @Override
+    public boolean onSwing(LivingEntity livingEntity, ItemStack itemStack) {
+        if (livingEntity instanceof PlayerLikeEntity playerLikeEntity) {
+            Hand hand = switcher % 4 == 0 ? Hand.MAIN_HAND : Hand.OFF_HAND;
+            playAnimation(
+                    playerLikeEntity,
+                    hand,
+                    ModAnimationIndex.BLASTER__RIGHT_ARM_FIRE,
+                    ModAnimationIndex.BLASTER__LEFT_ARM_FIRE
+            );
+
+            switcher++;
+
+            if (playerLikeEntity instanceof PlayerEntity player) {
+                playIdleAnimationAfter(player, hand, 1f);
+            }
+        }
+
+        return true;
     }
 }

@@ -14,8 +14,16 @@ public class ModSoundProvider extends SoundProvider {
 
     @Override
     protected void generate() {
-        create(ModSounds.BLASTER_COCK_1)
+        create(ModSounds.BLASTER_COCK)
                 .sound("item/blaster/cock/cock_1")
+                .subtitle()
+                .build();
+        create(ModSounds.BLASTER_SHOOT)
+                .sound("item/blaster/shoot/shoot_1")
+                .sound("item/blaster/shoot/shoot_2")
+                .sound("item/blaster/shoot/shoot_3")
+                .sound("item/blaster/shoot/shoot_4")
+                .sound("item/blaster/shoot/shoot_5")
                 .subtitle()
                 .build();
     }

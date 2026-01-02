@@ -4,5 +4,15 @@
       "character_engine:item/blaster/cock/cock_1"
     ],
     "subtitle": "subtitles.character_engine.item.blaster.cock"
+  },
+  "item.blaster.shoot": {
+    "sounds": [
+      "character_engine:item/blaster/shoot/shoot_1",
+      "character_engine:item/blaster/shoot/shoot_2",
+      "character_engine:item/blaster/shoot/shoot_3",
+      "character_engine:item/blaster/shoot/shoot_4",
+      "character_engine:item/blaster/shoot/shoot_5"
+    ],
+    "subtitle": "subtitles.character_engine.item.blaster.shoot"
   }
 }

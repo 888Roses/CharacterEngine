@@ -1,6 +1,7 @@
 package dev.rosenoire.character_engine.cca;
 
 import dev.rosenoire.character_engine.cca.components.PlayerActionsComponent;
+import dev.rosenoire.character_engine.cca.components.PlayerFovComponent;
 import dev.rosenoire.character_engine.cca.components.PlayerItemManagerComponent;
 import dev.rosenoire.character_engine.cca.components.TickingItemComponent;
 import dev.rosenoire.character_engine.common.CharacterEngine;
@@ -24,10 +25,15 @@ public class ModEntityComponentIndex implements EntityComponentInitializer {
             CharacterEngine.id("ticking_items"), TickingItemComponent.class
     );
 
+    public static final ComponentKey<PlayerFovComponent> PLAYER_FOV = ComponentRegistry.getOrCreate(
+            CharacterEngine.id("player_fov"), PlayerFovComponent.class
+    );
+
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, ITEM_MANAGER, PlayerItemManagerComponent::new);
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, ACTIONS, PlayerActionsComponent::new);
+        entityComponentFactoryRegistry.registerFor(PlayerEntity.class, PLAYER_FOV, PlayerFovComponent::new);
         entityComponentFactoryRegistry.registerFor(LivingEntity.class, TICKING_ITEM, TickingItemComponent::new);
     }
 }

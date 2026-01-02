@@ -16,6 +16,7 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void generate() {
         item(ModItemIndex.BLASTER, "Blaster");
-        sound(ModSounds.BLASTER_COCK_1, "Blaster Drawn");
+        sound(ModSounds.BLASTER_COCK, "Blaster Drawn");
+        sound(ModSounds.BLASTER_SHOOT, "Blaster Shot");
     }
 }
