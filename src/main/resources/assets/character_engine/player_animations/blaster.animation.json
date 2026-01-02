@@ -135,7 +135,7 @@
 				"0.0417": {
 					"effect": "character_engine:muzzle_flash",
 					"locator": "right_arm",
-					"pre_effect_script": "{    \"position\": [0.3125, 0, 0.7],    \"velocity\": [0, 0, 0]};"
+					"pre_effect_script": "{\n    \"position\": [0.3125, 0, 0.7]\n};"
 				}
 			}
 		}

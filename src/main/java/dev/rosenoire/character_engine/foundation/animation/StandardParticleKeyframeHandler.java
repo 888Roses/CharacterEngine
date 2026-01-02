@@ -56,7 +56,7 @@ import java.util.Optional;
  *     {
  *         "position": [0.75, 0.36, 0.15], // Sets the base position of the spawned particles to this value.
  *         "velocity": [4, 0, 0], // Sets the velocity of the spawned particles to 4.
- *         "random_spread": [1, 1, 1], // Adds a random offset between -1 and +1 on every axes for each particle spawned.
+ *         "spread": [1, 1, 1], // Adds a random offset between -1 and +1 on every axes for each particle spawned.
  *         "count": 4 // Sets the count of particles spawned by this keyframe to 4.
  *     }
  *     }
@@ -103,14 +103,14 @@ public class StandardParticleKeyframeHandler implements CustomKeyFrameEvents.Cus
 
             double3 position = getDouble3(particleObject, "position", double3.zero);
             double3 velocity = getDouble3(particleObject, "velocity", double3.zero);
-            double3 randomSpread = getDouble3(particleObject, "random_spread", double3.zero);
+            double3 spread = getDouble3(particleObject, "spread", double3.zero);
             int count = math.max(1, getInt(particleObject, "count", 1));
 
-            return new ParticleData(position, velocity, randomSpread, count);
+            return new ParticleData(position, velocity, spread, count);
         }
     }
 
-    public record ParticleData(double3 position, double3 velocity, double3 randomSpread, int count) {
+    public record ParticleData(double3 position, double3 velocity, double3 spread, int count) {
     }
 
     @Override
@@ -141,11 +141,14 @@ public class StandardParticleKeyframeHandler implements CustomKeyFrameEvents.Cus
 
             ParticleType<?> particleType = key.get().value();
             if (particleType instanceof SimpleParticleType simpleParticleType) {
+                // Transform JSON text into valid output.
                 String jsonText = particleKeyframeData.script();
-                CharacterEngine.LOGGER.info("Script: {}", jsonText);
                 jsonText = jsonText.replace("\\n", "").replace("\\\"", "\"");
+                // By default, for some reason, the script channel always ends with a semicolon ';', so we need to substring it out.
+                jsonText = jsonText.substring(0, jsonText.length() - 1);
                 CharacterEngine.LOGGER.info("Modified Script: {}", jsonText);
 
+                // Read and deserialize the JSON into particle data.
                 StringReader reader = new StringReader(jsonText);
                 JsonReader jsonReader = ParticleDataLoader.GSON.newJsonReader(reader);
                 jsonReader.setStrictness(Strictness.LENIENT);
@@ -184,9 +187,9 @@ public class StandardParticleKeyframeHandler implements CustomKeyFrameEvents.Cus
                             world,
                             simpleParticleType,
                             particlePosition.add(
-                                    MathHelper.nextDouble(random, -particleData.randomSpread().x(), particleData.randomSpread().x()),
-                                    MathHelper.nextDouble(random, -particleData.randomSpread().y(), particleData.randomSpread().y()),
-                                    MathHelper.nextDouble(random, -particleData.randomSpread().z(), particleData.randomSpread().z())
+                                    MathHelper.nextDouble(random, -particleData.spread().x(), particleData.spread().x()),
+                                    MathHelper.nextDouble(random, -particleData.spread().y(), particleData.spread().y()),
+                                    MathHelper.nextDouble(random, -particleData.spread().z(), particleData.spread().z())
                             ),
                             double3.zero
                     );
