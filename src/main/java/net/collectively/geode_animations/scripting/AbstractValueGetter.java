@@ -1,4 +1,4 @@
-package dev.rosenoire.character_engine.foundation.animation.scripting;
+package net.collectively.geode_animations.scripting;
 
 import net.minecraft.util.math.random.Random;
 

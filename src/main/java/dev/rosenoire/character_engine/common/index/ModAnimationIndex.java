@@ -1,7 +1,7 @@
 package dev.rosenoire.character_engine.common.index;
 
-import dev.rosenoire.character_engine.foundation.index.AnimationIndex;
-import static dev.rosenoire.character_engine.foundation.index.AnimationIndex.*;
+import net.collectively.geode_animations.index.AnimationIndex;
+import static net.collectively.geode_animations.index.AnimationIndex.*;
 import net.minecraft.util.Identifier;
 
 public interface ModAnimationIndex extends AnimationIndex {

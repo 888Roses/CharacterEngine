@@ -1,6 +1,6 @@
-package dev.rosenoire.character_engine.foundation.animation;
+package net.collectively.geode_animations.handlers;
 
-import dev.rosenoire.character_engine.foundation.animation.scripting.AbstractValueGetter;
+import net.collectively.geode_animations.scripting.AbstractValueGetter;
 import net.collectively.geode.core.types.double3;
 
 /// `position`<br/> Represents the base position of the particle, relative to the player's eye position. The particle will also rotate with the player's view keeping this offset from the player's eyes. Expects a three-dimensional value. For example:

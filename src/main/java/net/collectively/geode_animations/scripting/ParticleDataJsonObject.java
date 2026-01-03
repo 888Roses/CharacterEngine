@@ -1,10 +1,8 @@
-package dev.rosenoire.character_engine.foundation.animation.scripting;
+package net.collectively.geode_animations.scripting;
 
 import com.google.gson.*;
-import dev.rosenoire.character_engine.foundation.animation.ParticleData;
+import net.collectively.geode_animations.handlers.ParticleData;
 import net.collectively.geode.core.types.double3;
-
-import java.util.Random;
 
 public class ParticleDataJsonObject extends ExtendedJsonObject<ParticleData> {
     public static final Gson GSON = createAdapter(ParticleData.class, ParticleDataJsonObject::new);

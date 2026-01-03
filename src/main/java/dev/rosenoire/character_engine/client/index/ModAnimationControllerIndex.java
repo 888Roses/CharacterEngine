@@ -1,28 +1,38 @@
-package dev.rosenoire.character_engine.client.animation;
+package dev.rosenoire.character_engine.client.index;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranim.api.PlayerAnimationFactory;
 import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;
 import com.zigythebird.playeranimcore.animation.layered.modifier.MirrorModifier;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import com.zigythebird.playeranimcore.enums.PlayState;
 import com.zigythebird.playeranimcore.math.Vec3f;
-import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.index.ModItemIndex;
-import dev.rosenoire.character_engine.foundation.animation.ParticleKeyframeHandler;
-import dev.rosenoire.character_engine.foundation.animation.SoundKeyframeHandler;
-import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
+import net.collectively.geode_animations.handlers.ParticleKeyframeHandler;
+import net.collectively.geode_animations.handlers.SoundKeyframeHandler;
 import net.collectively.geode.core.math;
+import net.collectively.geode_animations.index.AnimationControllerIndex;
 import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 
-public interface ModAnimationControllerIndex {
-    Identifier BLASTER = CharacterEngine.id("blaster__right_hand");
-    Identifier BLASTER_MIRRORED = CharacterEngine.id("blaster__left_hand");
+public class ModAnimationControllerIndex extends AnimationControllerIndex {
+    public static final Identifier BLASTER = register(
+            "blaster",
+            1000,
+            playerLike -> createStandardPlayerAnimationController(playerLike, false)
+    );
+    public static final Identifier BLASTER_MIRRORED = register(
+            "blaster_mirrored",
+            1000,
+            playerLike -> createStandardPlayerAnimationController(playerLike, true)
+    );
+
+    public static void initialize() {
+        registerAll();
+    }
 
     private static PlayerAnimationController createStandardPlayerAnimationController(PlayerLikeEntity playerLike, boolean isMirrored) {
         PlayerAnimationController controller = new PlayerAnimationController(playerLike, (i, j, k) -> PlayState.CONTINUE);
@@ -63,17 +73,5 @@ public interface ModAnimationControllerIndex {
                 new Vec3f(pitch * (shouldBeDivided ? 0.5f : 1), 0, 0),
                 new Vec3f(0, 0, 0)
         ));
-    }
-
-    static void initialize() {
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                BLASTER, 1000,
-                playerLike -> createStandardPlayerAnimationController(playerLike, false)
-        );
-
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                BLASTER_MIRRORED, 1000,
-                playerLike -> createStandardPlayerAnimationController(playerLike, true)
-        );
     }
 }

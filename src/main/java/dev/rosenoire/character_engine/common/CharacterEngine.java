@@ -2,6 +2,7 @@ package dev.rosenoire.character_engine.common;
 
 import dev.rosenoire.character_engine.common.index.*;
 import net.collectively.geode.Geode;
+import net.collectively.geode_animations.GeodeAnimations;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -18,6 +19,8 @@ public class CharacterEngine implements ModInitializer {
     @Override
     public void onInitialize() {
         Geode.setHookedMod(MOD_ID);
+        GeodeAnimations.setHookedMod(MOD_ID);
+
         ModSounds.initialize();
         ModAnimationIndex.initialize();
         ModItemIndex.initialize();

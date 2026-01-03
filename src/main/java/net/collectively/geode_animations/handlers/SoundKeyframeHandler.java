@@ -1,4 +1,4 @@
-package dev.rosenoire.character_engine.foundation.animation;
+package net.collectively.geode_animations.handlers;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranimcore.animation.Animation;

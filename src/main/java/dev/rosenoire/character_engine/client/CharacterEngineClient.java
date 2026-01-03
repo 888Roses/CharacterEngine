@@ -1,6 +1,6 @@
 package dev.rosenoire.character_engine.client;
 
-import dev.rosenoire.character_engine.client.animation.ModAnimationControllerIndex;
+import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.client.index.ModClientParticleIndex;
 import dev.rosenoire.character_engine.client.index.ModClientPayloadIndex;
 import net.fabricmc.api.ClientModInitializer;

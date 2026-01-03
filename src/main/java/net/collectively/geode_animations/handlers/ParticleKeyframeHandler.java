@@ -1,4 +1,4 @@
-package dev.rosenoire.character_engine.foundation.animation;
+package net.collectively.geode_animations.handlers;
 
 import com.google.gson.Strictness;
 import com.google.gson.reflect.TypeToken;
@@ -16,7 +16,7 @@ import com.zigythebird.playeranimcore.bones.PlayerAnimBone;
 import com.zigythebird.playeranimcore.event.EventResult;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
-import dev.rosenoire.character_engine.foundation.animation.scripting.ParticleDataJsonObject;
+import net.collectively.geode_animations.scripting.ParticleDataJsonObject;
 import net.collectively.geode.core.math;
 import net.collectively.geode.core.types.double3;
 import net.collectively.geode.mc.util.WorldUtil;
