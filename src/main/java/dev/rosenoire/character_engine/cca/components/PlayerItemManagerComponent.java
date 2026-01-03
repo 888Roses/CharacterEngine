@@ -50,6 +50,8 @@ public class PlayerItemManagerComponent extends PlayerEntityComponent implements
                 if (previousStack != currentStack) {
                     PlayerStackChangeCallback.EVENT.invoker().onChanged(player, previousStack, currentStack, hand);
                 }
+            } else {
+                PlayerStackChangeCallback.EVENT.invoker().onChanged(player, null, currentStack, hand);
             }
 
             previousItemStacks.put(hand, currentStack);

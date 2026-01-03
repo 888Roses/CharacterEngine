@@ -1,6 +1,7 @@
 package dev.rosenoire.character_engine.common;
 
 import dev.rosenoire.character_engine.common.index.*;
+import dev.rosenoire.character_engine.foundation.index.FoundationCallbacks;
 import net.collectively.geode.Geode;
 import net.collectively.geode_animations.GeodeAnimations;
 import net.fabricmc.api.ModInitializer;
@@ -21,11 +22,18 @@ public class CharacterEngine implements ModInitializer {
         Geode.setHookedMod(MOD_ID);
         GeodeAnimations.setHookedMod(MOD_ID);
 
-        ModSounds.initialize();
+        ModAnimationControllerIndex.initialize();
         ModAnimationIndex.initialize();
-        ModItemIndex.initialize();
+
+        ModSounds.initialize();
         ModParticleIndex.initialize();
+
+        ModItemIndex.initialize();
+
         ModCommonPayloadIndex.registerAll();
         ModCommonCallbackIndex.subscribeCallbacks();
+
+        // MUST BE AT THE END OTHERWISE THE WORLD CRUMBLES.
+        FoundationCallbacks.subscribe();
     }
 }

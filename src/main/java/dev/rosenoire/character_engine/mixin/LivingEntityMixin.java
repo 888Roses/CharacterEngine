@@ -1,6 +1,6 @@
 package dev.rosenoire.character_engine.mixin;
 
-import dev.rosenoire.character_engine.foundation.item.AttackItem;
+import dev.rosenoire.character_engine.foundation.item.SwingableItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -16,8 +16,8 @@ public class LivingEntityMixin {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         ItemStack itemStack = livingEntity.getStackInHand(hand);
 
-        if (itemStack.getItem() instanceof AttackItem attackItem) {
-            if (!attackItem.onSwing(livingEntity, itemStack)) {
+        if (itemStack.getItem() instanceof SwingableItem swingableItem) {
+            if (!swingableItem.onSwing(livingEntity, itemStack)) {
                 ci.cancel();
             }
         }

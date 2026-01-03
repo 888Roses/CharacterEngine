@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import org.jetbrains.annotations.Nullable;
 
 public interface PlayerStackChangeCallback {
     Event<PlayerStackChangeCallback> EVENT = EventFactory.createArrayBacked(
@@ -16,5 +17,5 @@ public interface PlayerStackChangeCallback {
             }
     );
 
-    void onChanged(PlayerEntity player, ItemStack previousStack, ItemStack itemStack, Hand hand);
+    void onChanged(PlayerEntity player, @Nullable ItemStack previousStack, ItemStack itemStack, Hand hand);
 }
