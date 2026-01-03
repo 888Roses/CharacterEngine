@@ -139,7 +139,7 @@ public class ParticleKeyframeHandler implements CustomKeyFrameEvents.CustomKeyFr
             Optional<RegistryEntry.Reference<ParticleType<?>>> registryEntry = Registries.PARTICLE_TYPE.getEntry(particleIdentifier);
 
             if (registryEntry.isEmpty()) {
-                CharacterEngine.LOGGER.error("ParticleType registryEntry reference for identifier '{}' could not be found!", particleIdentifier);
+                CharacterEngine.LOGGER.error("ParticleType registryEntry reference for identifier '{}' could not be found (Animation '{}')!", particleIdentifier, currentAnimationNameOrId);
                 continue;
             }
             // endregion
