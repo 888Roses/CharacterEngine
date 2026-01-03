@@ -10,10 +10,9 @@ import com.zigythebird.playeranimcore.enums.PlayState;
 import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.index.ModItemIndex;
-import dev.rosenoire.character_engine.foundation.animation.StandardParticleKeyframeHandler;
+import dev.rosenoire.character_engine.foundation.animation.ParticleKeyframeHandler;
 import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
 import net.collectively.geode.core.math;
-import net.collectively.geode.mc.index.ItemIndex;
 import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
@@ -28,7 +27,7 @@ public interface ModAnimationControllerIndex {
         PlayerAnimationController controller = new PlayerAnimationController(playerLike, (i, j, k) -> PlayState.CONTINUE);
 
         controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
-        controller.setParticleKeyframeHandler(new StandardParticleKeyframeHandler());
+        controller.setParticleKeyframeHandler(new ParticleKeyframeHandler());
 
         controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
         controller.setFirstPersonConfiguration(new FirstPersonConfiguration(true, true, true, true, true));
