@@ -33,6 +33,59 @@ import net.minecraft.world.World;
 import java.io.StringReader;
 import java.util.Optional;
 
+/// By default, PAL lacks a handler for particles. For that reason, Geode animation adds a brand new, powerful one, making use of `JSON` to provide full control over the played particles. In Blockbench, adding a particle keyframe is as simple as:
+/// 1. Clicking on the button named `Animate Effects` in between `Bring Up All Animators` and the flag icon.
+/// 2. In the Timeline, under "Effects", clicking on the plus icon next to the `Particle` channel.
+/// 3. Go in the Keyframe window and edit the fields there. ***
+/// ## Fields
+/// #### Effect
+/// Contains the `identifier` of every particle that can be played. Particle identifiers are split using a comma ',' character. For example:
+/// ```
+/// minecraft:flame, minecraft:small_flame
+/// ```
+/// Each individual played particle (when there are multiple played at once, using the `count` JSON property) will then be picked randomly in this array. There is no limit as to how many different particle types can be used.
+///
+/// #### Locator
+/// The name of the `bone` hosting the particle. If the locator is not found, the particle will be ignored. When hovering over this field, an arrow will appear on the right side of it, giving you access to a dropdown making browsing bones way easier. For example:
+/// ```
+/// right_arm
+/// ```
+/// <sub>**Note**: Including the hierarchy of the bone is not necessary and will lead to an ignored, invalid particle.</sub>
+///
+/// #### Script
+/// The script category, initially used for MoLang support, is where the `JSON` configuration of the particle comes into play. In it, you may input different properties to tweak the particle to your liking.<br/> **Note**: Unlike sound keyframes, the particle keyframes will not play in Blockbench.
+/// For this reason, it is advised to always keep an instance of your game running in the background to regularly check what the particles look like.<br/> Here are the different properties available:<br/>
+///
+/// `position`<br/> Represents the base position of the particle, relative to the player's eye position. The particle will also rotate with the player's view keeping this offset from the player's eyes. Expects a three-dimensional value. For example:
+/// ```json
+/// {
+///   "position": [1, 2, 3.45]
+/// }
+/// ```
+///
+/// `offset`<br/> A secondary position added to the main `position` field to add a potentially random offset easily. For example:
+/// ```json
+/// {
+///   // Adds a random value between -0.5 and 0.5 on the X axis, 0 vertically and 1 on the Z axis.
+///   "offset": [{"min": -0.5, "max": 0.5}, 0, 1]
+/// }
+/// ```
+///
+/// `velocity`<br/> In most cases, represents the speed at which the particle is moving and in what direction it is moving. For some particles, the `X`, `Y` or `Z` components of the velocity might be used to tweak other settings. For example:
+/// ```json
+/// {
+///   // This particle goes up.
+///   "velocity": [0, 1, 0]
+/// }
+/// ```
+///
+/// `count`<br/> Represents how many particles are spawned every time this keyframe is played. Requires an `Integer` value greater or equal to `1`. Providing a count of particles equal or lesser than `0` will prevent the particle from playing. For example:
+/// ```json
+/// {
+///   // 20 particles will be spawned.
+///   "count": 20
+/// }
+/// ```
 public class ParticleKeyframeHandler implements CustomKeyFrameEvents.CustomKeyFrameHandler<ParticleKeyframeData> {
     @SuppressWarnings("UnstableApiUsage")
     @Override

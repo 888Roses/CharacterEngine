@@ -11,6 +11,7 @@ import com.zigythebird.playeranimcore.math.Vec3f;
 import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.index.ModItemIndex;
 import dev.rosenoire.character_engine.foundation.animation.ParticleKeyframeHandler;
+import dev.rosenoire.character_engine.foundation.animation.SoundKeyframeHandler;
 import dev.rosenoire.character_engine.foundation.animation.StandardSoundKeyframeHandler;
 import net.collectively.geode.core.math;
 import net.minecraft.entity.PlayerLikeEntity;
@@ -26,7 +27,7 @@ public interface ModAnimationControllerIndex {
     private static PlayerAnimationController createStandardPlayerAnimationController(PlayerLikeEntity playerLike, boolean isMirrored) {
         PlayerAnimationController controller = new PlayerAnimationController(playerLike, (i, j, k) -> PlayState.CONTINUE);
 
-        controller.setSoundKeyframeHandler(new StandardSoundKeyframeHandler());
+        controller.setSoundKeyframeHandler(new SoundKeyframeHandler());
         controller.setParticleKeyframeHandler(new ParticleKeyframeHandler());
 
         controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
