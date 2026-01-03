@@ -1,0 +1,8 @@
+{
+  "instructions": [
+    {
+      "id": "character_engine:blaster.draw",
+      "loop": "hold"
+    }
+  ]
+}

@@ -1,13 +1,14 @@
 package dev.rosenoire.character_engine.common.item;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranimcore.animation.RawAnimation;
+import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.animation.AnimationAccess;
-import dev.rosenoire.character_engine.common.index.ModAnimationControllerIndex;
+import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.common.index.ModAnimationIndex;
 import dev.rosenoire.character_engine.foundation.item.SwingableItem;
 import dev.rosenoire.character_engine.foundation.item.StackChangeAwareItem;
 import dev.rosenoire.character_engine.foundation.item.TickingItem;
+import net.collectively.geode_animations.controllers.AnimationQueueData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,8 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-
-import static com.zigythebird.playeranim.animation.PlayerAnimResources.getAnimation;
 
 public class PistolItem extends Item implements StackChangeAwareItem, SwingableItem, TickingItem {
     public PistolItem(Settings settings) {
@@ -39,9 +38,7 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
                 return;
             }
 
-            controller.triggerAnimation(RawAnimation.begin()
-                    .thenPlayAndHold(getAnimation(ModAnimationIndex.BLASTER_DRAW))
-            );
+            AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.draw"));
         }
     }
 
@@ -71,9 +68,7 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
             return true;
         }
 
-        controller.triggerAnimation(RawAnimation.begin()
-                .thenPlayAndHold(getAnimation(ModAnimationIndex.BLASTER_FIRE))
-        );
+        AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.fire"));
 
         playerLike.setPitch(playerLike.getPitch() - 1);
         float randomYaw = MathHelper.nextFloat(playerLike.getRandom(), -0.4f, 0.4f);
@@ -99,9 +94,7 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
             }
 
             if (!controller.isActive()) {
-                controller.triggerAnimation(RawAnimation.begin()
-                        .thenPlayAndHold(getAnimation(ModAnimationIndex.BLASTER_DRAW))
-                );
+                AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.draw"));
             }
         }
     }

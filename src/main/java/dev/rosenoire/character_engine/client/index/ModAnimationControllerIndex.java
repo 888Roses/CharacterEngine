@@ -1,4 +1,4 @@
-package dev.rosenoire.character_engine.common.index;
+package dev.rosenoire.character_engine.client.index;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranimcore.animation.layered.modifier.AdjustmentModifier;

@@ -22,63 +22,137 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 /// # Sounds
-/// While PAL (Player Animation Library) has its own sound keyframe handler, it is quite limited, so this library brings a more advanced one. In Blockbench, adding a sound keyframe is as simple as:
+///
+/// While PAL (Player Animation Library) has its own sound keyframe handler, it is quite limited, so this library brings a
+/// more advanced one.
+///
+/// ## Adding Sound Keyframes
+///
+/// In Blockbench, adding a sound keyframe is as simple as:
+///
 /// 1. Clicking on the button named `Animate Effects` in between `Bring Up All Animators` and the flag icon.
 /// 2. In the Timeline, under "Effects", clicking on the plus icon next to the `Sound` channel.
-/// 3. Go in the Keyframe window and edit the fields there. ***
-/// ## Fields
-/// #### Effect
-/// Contains information about the played sound (sound identifier, volume, pitch). Those information are formatted as follows:
+/// 3. Go in the Keyframe window and edit the fields there.
 ///
-/// `identifier`<br/> Represents the identifiers of the sound(s) to play. Providing multiple sounds is as simple as separating them with commas ','. When providing multiple sounds, a random one will be picked in the array. For example:
-/// ```
+/// ## Editable Keyframe Fields
+///
+/// Currently, only the `effect` field is used. It contains information about the played sound (sound identifier, volume,
+/// pitch). Those information are formatted as follows:
+///
+/// #### `identifier`
+///
+/// Represents the `identifier` of the sound(s) you want to play. Providing multiple sounds is as simple as separating them
+/// with commas `,`. When providing multiple sounds, a random one will be picked in the array.
+///
+/// ```Example
 /// minecraft:item.brush.brushing.generic, minecraft:item.brush.brushing.sand
 /// ```
 ///
-/// `volume`<br/> Represents the volume of the sound played. See the section on numeric value format below for more information on the syntax. For example:
-/// ```
+/// #### `volume`
+///
+/// Represents the volume of the sound played. See the section on numeric value format below for more information on the
+/// syntax.
+///
+/// ```Example
 /// volume = 0.5
 /// ```
 ///
-/// `pitch`<br/> Represents the pitch of the sound played. See the section on numeric value format below for more information on the syntax. For example:
-/// ```
+/// #### `pitch`
+///
+/// Represents the pitch of the sound played. See the section on numeric value format below for more information on the
+/// syntax.
+///
+/// ```Example
 /// pitch = {0.9, 1.1}
 /// ```
-/// <br/>
 ///
-/// You may now combine those different keys by separating them with semicolon ';' characters. For example:
-/// ```
+/// #### Finally
+///
+/// You can combine all of those different keys by separating them with a semicolon `;` character:
+///
+/// ```Example
 /// minecraft:item.brush.brushing.generic, minecraft:item.brush.brushing.sand; volume = 0.5; pitch = {0.9, 1.1};
 /// ```
-/// #### Locator
-/// Unused, work in progress.
 ///
-/// ***
-/// ### Syntax of Numeric Fields
-/// Numeric fields are fields that require a number value. Those can be, for example, the `volume` and the `pitch` in this keyframe's **Effects** field. Their syntax is quite easy:
+/// ## Syntax of Numbers
 ///
-/// **Constant**<br/> A value that does not change. It can be any number. For example:
-/// ```
-/// my_field = 1234;
-/// ```
+/// As we have seen previously, some keys require number values (like for `pitch` and `volume` for example). Those number can
+/// be expressed in different ways:
 ///
-/// **List**<br/> An array of numbers to pick from. A random number will be chosen in this array. Each entry is separated using comma ',' characters. In order for the field to know that its value is a `list`, the value must start with a `[`. For example:
-/// ```
-/// my_field = [1, 2, 3, 4];
-/// ```
+/// ###### <br/>
 ///
-/// Note: It is not required to end with a `]` but looks clearer and nicer that way. For example, this does the exact same as the above syntax:
-/// ```
-/// my_field = [1, 2, 3, 4;
+/// ---
+///
+/// ### `constant`
+///
+/// A constant value is one that never changes. It will simply be used for the key.
+///
+/// ```Example
+/// pitch = 0.6;
 /// ```
 ///
-/// **Random**<br/> A random value between two bounds. The value will be chosen between the first provided number (min) and the second provided number (max). For example:
+/// ###### <br/>
+///
+/// ---
+///
+/// ### `list`
+///
+/// An array of constant numbers to pick from. When a number is required, a random one is picked from this array. Each entry
+/// is separated by a comma `,` character. A `list` value always starts with an open bracket `[` character.
+///
+/// ```Example
+/// pitch = [0.9, 1.1];
 /// ```
-/// my_field = {1, 4};
+///
+/// <sup>Sets the pitch to either a value of `0.9` or `1.1`.</sup>
+///
+/// ##### Special Cases:
+///
+/// - If the `list` only contains `1` constant value, it will be simplified to a `constant` operation.
+/// - If the `list` does not contain any value, the fallback will be used instead.
+///
+/// > [!NOTE]
+/// > While the closing bracket `]` character is not required for the list to be considered valid, it is advised to use it,
+/// > for the sake of clarity. As such,
+/// > ```Example
+/// pitch = [0.9, 1.1];
 /// ```
-/// Special Cases:
-///   - If more than `2` numbers are provided, only the first two numbers will be used to determine the bound.
-///   - If less than `2` numbers are provided, the default value of that field will be returned instead, ignoring this instruction.
+/// > Is the same as doing,
+/// > ```Example
+/// pitch = [0.9, 1.1;
+/// ```
+///
+/// ###### <br/>
+///
+/// ---
+///
+/// ### `random`
+///
+/// A random value between two bounds. The value will be chosen between the first provided number (`min`) and the second
+/// provided number (`max`). A `random` value always starts with an open curly bracket `{` character.
+///
+/// ```Example
+/// pitch = {0.9, 1.1};
+/// ```
+///
+/// <sup>Sets the pitch to a random number between `0.9` and `1.1`.</sup>
+///
+/// ##### Special Cases:
+///
+/// - If more than `2` numbers are provided, only the first two numbers will be used to determine the bound.
+/// - If less than `2` numbers are provided, the default value of that field will be returned instead, ignoring this
+/// instruction.
+///
+/// > [!NOTE]
+/// > Akin to `list` values, the closing curly bracket `}` character is not required, but it is strongly advised to use it
+/// > either. As such,
+/// > ```Example
+/// pitch = {0.9, 1.1};
+/// ```
+/// > Is the same as doing,
+/// > ```Example
+/// pitch = {0.9, 1.1;
+/// ```
 public class SoundKeyframeHandler implements CustomKeyFrameEvents.CustomKeyFrameHandler<SoundKeyframeData> {
     @Override
     public EventResult handle(
