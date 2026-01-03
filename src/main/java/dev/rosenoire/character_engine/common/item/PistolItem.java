@@ -1,6 +1,8 @@
 package dev.rosenoire.character_engine.common.item;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
+import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.animation.AnimationAccess;
 import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
@@ -14,6 +16,7 @@ import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -96,6 +99,15 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
             if (!controller.isActive()) {
                 AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.draw"));
             }
+
+            controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+            controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
+                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND),
+                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.OFF_HAND : Hand.MAIN_HAND),
+                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND),
+                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.OFF_HAND : Hand.MAIN_HAND),
+                    true
+            ));
         }
     }
 

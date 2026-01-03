@@ -42,7 +42,7 @@ public class ModAnimationControllerIndex extends AnimationControllerIndex {
         controller.setParticleKeyframeHandler(new ParticleKeyframeHandler());
 
         controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-        controller.setFirstPersonConfiguration(new FirstPersonConfiguration(true, true, true, true, true));
+        controller.setFirstPersonConfiguration(new FirstPersonConfiguration(!isMirrored, isMirrored, !isMirrored, isMirrored, true));
 
         controller.addModifierLast(new AdjustmentModifier(partName -> rotateWithPitch(partName, controller, isMirrored)));
 
