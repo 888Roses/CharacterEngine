@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "SwingableClientAttackMixin"
+    "AttackAwareClientAttackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

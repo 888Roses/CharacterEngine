@@ -6,7 +6,7 @@ import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.animation.AnimationAccess;
 import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.common.index.ModAnimationIndex;
-import net.collectively.geode.mc.item.SwingableItem;
+import net.collectively.geode.mc.item.AttackAwareItem;
 import dev.rosenoire.character_engine.foundation.item.StackChangeAwareItem;
 import dev.rosenoire.character_engine.foundation.item.TickingItem;
 import net.collectively.geode_animations.controllers.AnimationQueueData;
@@ -21,7 +21,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-public class PistolItem extends Item implements StackChangeAwareItem, SwingableItem, TickingItem {
+public class PistolItem extends Item implements StackChangeAwareItem, AttackAwareItem, TickingItem {
     public PistolItem(Settings settings) {
         super(settings);
     }
@@ -46,7 +46,7 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
 
     // true to execute base false otherwise
     @Override
-    public void onSwing(PlayerEntity player, ItemStack itemStack) {
+    public void onAttack(PlayerEntity player, ItemStack itemStack) {
         ensurePistolInHandForPistolAnimations(player);
 
         boolean canShootOffHand = hasPistolInHand(player, Hand.OFF_HAND);
