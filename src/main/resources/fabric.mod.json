@@ -24,7 +24,8 @@
     ]
   },
   "mixins": [
-    "character_engine.mixins.json"
+    "character_engine.mixins.json",
+    "geode.mixins.json"
   ],
   "custom": {
     "cardinal-components": [

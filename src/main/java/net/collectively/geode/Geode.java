@@ -1,5 +1,6 @@
 package net.collectively.geode;
 
+import net.collectively.geode.mc._internal.GeodeMinecraft;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.util.Identifier;
@@ -30,6 +31,8 @@ public class Geode {
     }
 
     private static void initializeInternals() {
+        GeodeMinecraft.initialize();
+
         OnInitializedCallback.EVENT.invoker().onInitialized();
     }
 

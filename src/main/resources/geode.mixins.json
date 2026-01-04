@@ -1,14 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.rosenoire.character_engine.mixin",
+  "package": "net.collectively.geode.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "client.GameRendererMixin"
   ],
   "client": [
-    "client.CameraMixin",
-    "client.hud.InGameHudMixin"
+    "SwingableClientAttackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -46,29 +46,20 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
 
     // true to execute base false otherwise
     @Override
-    public boolean onSwing(LivingEntity livingEntity, ItemStack itemStack, Hand hand) {
-        if (!(livingEntity instanceof PlayerLikeEntity playerLike)) {
-            return true;
+    public void onSwing(PlayerEntity player, ItemStack itemStack) {
+        ensurePistolInHandForPistolAnimations(player);
+
+        boolean canShootOffHand = hasPistolInHand(player, Hand.OFF_HAND);
+        Hand handThatShoots = !canShootOffHand || player.age % 2 == 1 ? Hand.MAIN_HAND : Hand.OFF_HAND;
+
+        Identifier controller = getControllerId(player, handThatShoots);
+        if (!AnimationQueueData.triggerAnimationServerSafe(player, controller, CharacterEngine.id("blaster.fire"))) {
+            return;
         }
 
-        ensurePistolInHandForPistolAnimations(playerLike);
-
-        boolean canShootOffHand = hasPistolInHand(playerLike, Hand.OFF_HAND);
-        Hand handThatShoots = !canShootOffHand || livingEntity.age % 2 == 1 ? Hand.MAIN_HAND : Hand.OFF_HAND;
-
-        if (!AnimationQueueData.triggerAnimationServerSafe(
-                playerLike,
-                getControllerId(playerLike, handThatShoots),
-                CharacterEngine.id("blaster.fire")
-        )) {
-            return true;
-        }
-
-        playerLike.setPitch(playerLike.getPitch() - 1);
-        float randomYaw = MathHelper.nextFloat(playerLike.getRandom(), -0.4f, 0.4f);
-        playerLike.setYaw(playerLike.getYaw() + randomYaw);
-
-        return false;
+        player.setPitch(player.getPitch() - 1);
+        float randomYaw = MathHelper.nextFloat(player.getRandom(), -0.4f, 0.4f);
+        player.setYaw(player.getYaw() + randomYaw);
     }
 
     // endregion
