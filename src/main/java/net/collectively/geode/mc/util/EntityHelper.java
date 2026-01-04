@@ -3,6 +3,9 @@ package net.collectively.geode.mc.util;
 import net.collectively.geode.core.types.double2;
 import net.collectively.geode.core.types.double3;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.PlayerLikeEntity;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -18,6 +21,10 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("unused")
 public interface EntityHelper {
+    static boolean isMainHand(PlayerLikeEntity playerLike, Hand hand) {
+        return (hand == Hand.MAIN_HAND) == (playerLike.getMainArm() == Arm.RIGHT);
+    }
+
     static double3 getForward(Entity entity) {
         return new double3(entity.getRotationVector());
     }

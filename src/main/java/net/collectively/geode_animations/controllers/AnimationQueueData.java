@@ -2,16 +2,22 @@ package net.collectively.geode_animations.controllers;
 
 import com.google.gson.*;
 import com.zigythebird.playeranim.animation.PlayerAnimResources;
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import com.zigythebird.playeranimcore.animation.Animation;
 import com.zigythebird.playeranimcore.animation.AnimationController;
 import com.zigythebird.playeranimcore.animation.RawAnimation;
-import dev.rosenoire.character_engine.common.CharacterEngine;
+import dev.rosenoire.character_engine.common.payloads.PlayAnimationQueueOnClientS2C;
 import net.collectively.geode_animations.GeodeAnimations;
 import net.collectively.geode_animations.loaders.AnimationQueueResourceReloader;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.PlayerLikeEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -106,6 +112,36 @@ public record AnimationQueueData(Instruction[] instructions) {
 
         RawAnimation rawAnimation = queueData.build();
         animationController.triggerAnimation(rawAnimation);
+        return true;
+    }
+
+    public static boolean triggerAnimationServerSafe(PlayerLikeEntity playerLike, Identifier animationControllerId, Identifier identifier) {
+        PlayerAnimationController animationController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(
+                playerLike,
+                animationControllerId
+        );
+
+        if (!triggerAnimation(animationController, identifier)) {
+            return false;
+        }
+
+        if (animationController instanceof PlayerAnimationController playerAnimationController) {
+            if (playerAnimationController.getAvatar() instanceof PlayerEntity animationAvatar) {
+                if (animationAvatar.getEntityWorld() instanceof ServerWorld serverWorld) {
+                    for (ServerPlayerEntity playersAround : serverWorld.getPlayers()) {
+                        ServerPlayNetworking.send(
+                                playersAround,
+                                new PlayAnimationQueueOnClientS2C(
+                                        animationAvatar.getUuid(),
+                                        animationControllerId,
+                                        identifier
+                                )
+                        );
+                    }
+                }
+            }
+        }
+
         return true;
     }
 

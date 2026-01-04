@@ -23,10 +23,8 @@ public abstract class AnimationControllerIndex {
 
     protected static void registerAll() {
         for(Map.Entry<Identifier, InitializationData> entry : TO_INITIALIZE.entrySet()) {
-            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    entry.getKey(), entry.getValue().priority(),
-                    entry.getValue().factory()
-            );
+            PlayerAnimationFactory controller = entry.getValue().factory();
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(entry.getKey(), entry.getValue().priority(), controller);
         }
     }
 }

@@ -2,7 +2,6 @@ package dev.rosenoire.character_engine.common.item;
 
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
-import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonMode;
 import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.animation.AnimationAccess;
 import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
@@ -18,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,27 +32,6 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
     public void onSelected(PlayerEntity player, Hand hand, ItemStack previousItemStack, ItemStack currentItemStack) {
         // Stopping any animation if the player isn't holding a pistol and is playing a pistol animation.
         ensurePistolInHandForPistolAnimations(player);
-
-        // Checks if the player has the pistol in their hand and plays the draw animation if that's the case.
-        if (hasPistolInHand(player, hand)) {
-            PlayerAnimationController controller = getController(player, hand);
-
-            if (controller == null) {
-                return;
-            }
-
-            boolean isRightHanded = player.getMainArm() == Arm.RIGHT;
-            Hand mainHand = isRightHanded ? Hand.MAIN_HAND : Hand.OFF_HAND;
-            Hand offHand = isRightHanded ? Hand.OFF_HAND : Hand.MAIN_HAND;
-
-            controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
-                    hasPistolInHand(player, mainHand),
-                    hasPistolInHand(player, offHand),
-                    hasPistolInHand(player, mainHand),
-                    hasPistolInHand(player, offHand),
-                    true
-            ));
-        }
     }
 
     @Override
@@ -66,7 +45,8 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
     // region ----=============---- Swinging ----=============----
 
     // true to execute base false otherwise
-    public boolean onSwing(LivingEntity livingEntity, ItemStack itemStack) {
+    @Override
+    public boolean onSwing(LivingEntity livingEntity, ItemStack itemStack, Hand hand) {
         if (!(livingEntity instanceof PlayerLikeEntity playerLike)) {
             return true;
         }
@@ -75,13 +55,14 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
 
         boolean canShootOffHand = hasPistolInHand(playerLike, Hand.OFF_HAND);
         Hand handThatShoots = !canShootOffHand || livingEntity.age % 2 == 1 ? Hand.MAIN_HAND : Hand.OFF_HAND;
-        PlayerAnimationController controller = getController(playerLike, handThatShoots);
 
-        if (controller == null) {
+        if (!AnimationQueueData.triggerAnimationServerSafe(
+                playerLike,
+                getControllerId(playerLike, handThatShoots),
+                CharacterEngine.id("blaster.fire")
+        )) {
             return true;
         }
-
-        AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.fire"));
 
         playerLike.setPitch(playerLike.getPitch() - 1);
         float randomYaw = MathHelper.nextFloat(playerLike.getRandom(), -0.4f, 0.4f);
@@ -107,7 +88,20 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
             }
 
             if (!controller.isActive()) {
-                AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.draw"));
+                // No need for server safe animation triggering in this one.
+                AnimationQueueData.triggerAnimation(getController(playerLike, hand), CharacterEngine.id("blaster.draw"));
+
+                boolean isRightHanded = playerLike.getMainArm() == Arm.RIGHT;
+                Hand mainHand = isRightHanded ? Hand.MAIN_HAND : Hand.OFF_HAND;
+                Hand offHand = isRightHanded ? Hand.OFF_HAND : Hand.MAIN_HAND;
+
+                controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
+                        hasPistolInHand(playerLike, mainHand),
+                        hasPistolInHand(playerLike, offHand),
+                        hasPistolInHand(playerLike, mainHand),
+                        hasPistolInHand(playerLike, offHand),
+                        true
+                ));
             }
         }
     }
@@ -150,6 +144,15 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
                 }
             }
         }
+    }
+
+    static @Nullable Identifier getControllerId(PlayerLikeEntity playerLike, Hand hand) {
+        return AnimationAccess.getControllerIdForHand(
+                playerLike,
+                hand,
+                ModAnimationControllerIndex.BLASTER,
+                ModAnimationControllerIndex.BLASTER_MIRRORED
+        );
     }
 
     static @Nullable PlayerAnimationController getController(PlayerLikeEntity playerLike, Hand hand) {
