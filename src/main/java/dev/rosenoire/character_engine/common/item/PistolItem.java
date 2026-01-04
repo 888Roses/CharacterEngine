@@ -7,7 +7,7 @@ import dev.rosenoire.character_engine.common.CharacterEngine;
 import dev.rosenoire.character_engine.common.animation.AnimationAccess;
 import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.common.index.ModAnimationIndex;
-import dev.rosenoire.character_engine.foundation.item.SwingableItem;
+import net.collectively.geode.mc.item.SwingableItem;
 import dev.rosenoire.character_engine.foundation.item.StackChangeAwareItem;
 import dev.rosenoire.character_engine.foundation.item.TickingItem;
 import net.collectively.geode_animations.controllers.AnimationQueueData;
@@ -41,7 +41,17 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
                 return;
             }
 
-            AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.draw"));
+            boolean isRightHanded = player.getMainArm() == Arm.RIGHT;
+            Hand mainHand = isRightHanded ? Hand.MAIN_HAND : Hand.OFF_HAND;
+            Hand offHand = isRightHanded ? Hand.OFF_HAND : Hand.MAIN_HAND;
+
+            controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
+                    hasPistolInHand(player, mainHand),
+                    hasPistolInHand(player, offHand),
+                    hasPistolInHand(player, mainHand),
+                    hasPistolInHand(player, offHand),
+                    true
+            ));
         }
     }
 
@@ -99,15 +109,6 @@ public class PistolItem extends Item implements StackChangeAwareItem, SwingableI
             if (!controller.isActive()) {
                 AnimationQueueData.triggerAnimation(controller, CharacterEngine.id("blaster.draw"));
             }
-
-            controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-            controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
-                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND),
-                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.OFF_HAND : Hand.MAIN_HAND),
-                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND),
-                    hasPistolInHand(playerLike, playerLike.getMainArm() == Arm.RIGHT ? Hand.OFF_HAND : Hand.MAIN_HAND),
-                    true
-            ));
         }
     }
 

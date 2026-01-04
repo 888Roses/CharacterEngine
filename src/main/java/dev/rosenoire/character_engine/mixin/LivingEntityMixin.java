@@ -1,6 +1,9 @@
 package dev.rosenoire.character_engine.mixin;
 
-import dev.rosenoire.character_engine.foundation.item.SwingableItem;
+import net.collectively.geode.mc.internal.networking.SwingableItemC2SPayload;
+import net.collectively.geode.mc.item.SwingableItem;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -17,6 +20,7 @@ public class LivingEntityMixin {
         ItemStack itemStack = livingEntity.getStackInHand(hand);
 
         if (itemStack.getItem() instanceof SwingableItem swingableItem) {
+            ClientPlayNetworking.send(new SwingableItemC2SPayload(hand == Hand.OFF_HAND));
             if (!swingableItem.onSwing(livingEntity, itemStack)) {
                 ci.cancel();
             }

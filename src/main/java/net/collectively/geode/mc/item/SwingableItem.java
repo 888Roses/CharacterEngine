@@ -1,4 +1,4 @@
-package dev.rosenoire.character_engine.foundation.item;
+package net.collectively.geode.mc.item;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
