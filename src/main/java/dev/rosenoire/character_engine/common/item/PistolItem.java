@@ -72,6 +72,8 @@ public class PistolItem extends Item implements StackChangeAwareItem, AttackAwar
         livingEntity.lastBodyYaw = livingEntity.lastHeadYaw;
 
         if (livingEntity instanceof PlayerLikeEntity playerLike) {
+            updateVisibleArms(playerLike, hand);
+
             PlayerAnimationController controller = getController(playerLike, hand);
 
             if (controller == null) {
@@ -81,18 +83,6 @@ public class PistolItem extends Item implements StackChangeAwareItem, AttackAwar
             if (!controller.isActive()) {
                 // No need for server safe animation triggering in this one.
                 AnimationQueueData.triggerAnimation(getController(playerLike, hand), CharacterEngine.id("blaster.draw"));
-
-                boolean isRightHanded = playerLike.getMainArm() == Arm.RIGHT;
-                Hand mainHand = isRightHanded ? Hand.MAIN_HAND : Hand.OFF_HAND;
-                Hand offHand = isRightHanded ? Hand.OFF_HAND : Hand.MAIN_HAND;
-
-                controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
-                        hasPistolInHand(playerLike, mainHand),
-                        hasPistolInHand(playerLike, offHand),
-                        hasPistolInHand(playerLike, mainHand),
-                        hasPistolInHand(playerLike, offHand),
-                        true
-                ));
             }
         }
     }
@@ -112,6 +102,26 @@ public class PistolItem extends Item implements StackChangeAwareItem, AttackAwar
     // endregion
 
     // region ----==========---- Animation Help ----==========----
+
+    private static void updateVisibleArms(PlayerLikeEntity playerLike, Hand hand) {
+        PlayerAnimationController controller = getController(playerLike, hand);
+
+        if (controller == null) {
+            return;
+        }
+
+        boolean isRightHanded = playerLike.getMainArm() == Arm.RIGHT;
+        Hand mainHand = isRightHanded ? Hand.MAIN_HAND : Hand.OFF_HAND;
+        Hand offHand = isRightHanded ? Hand.OFF_HAND : Hand.MAIN_HAND;
+
+        controller.setFirstPersonConfiguration(new FirstPersonConfiguration(
+                hasPistolInHand(playerLike, mainHand),
+                hasPistolInHand(playerLike, offHand),
+                hasPistolInHand(playerLike, mainHand),
+                hasPistolInHand(playerLike, offHand),
+                true
+        ));
+    }
 
     /**
      * Makes sure that the {@code playerLike} entity is holding this item in order to play pistol animations. In other words,

@@ -1,6 +1,5 @@
 package dev.rosenoire.character_engine.common;
 
-import dev.rosenoire.character_engine.client.index.ModAnimationControllerIndex;
 import dev.rosenoire.character_engine.common.index.*;
 import dev.rosenoire.character_engine.foundation.index.FoundationCallbacks;
 import net.collectively.geode.Geode;
