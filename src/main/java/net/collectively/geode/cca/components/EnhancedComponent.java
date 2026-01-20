@@ -34,8 +34,8 @@ public interface EnhancedComponent<T> extends Component {
     }
 
     /**
-     * Syncs this component between the client and server sides for this components {@link #getEntity()}. <p/>
-     * See also: {@link #sync(Object)}
+     * Syncs this {@code component} between the client and server sides for this component's {@link #getEntity()}.
+     * @see #sync(Object)
      */
     default void sync() {
         this.sync(this.getEntity());

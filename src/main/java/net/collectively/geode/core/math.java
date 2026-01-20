@@ -283,7 +283,7 @@ public interface math {
      * Returns the smallest (closest to negative infinity) {@code double} value that is greater than or equal to the
      * argument and is equal to a mathematical integer.
      *
-     * <p>Special Cases:
+     * Special Cases:
      * <ul>
      *     <li>If the argument value is already equal to a mathematical integer, then the result is the same as the
      *     argument.</li>
@@ -292,7 +292,7 @@ public interface math {
      *     <li>If the argument value is less than zero but greater than -1.0, then the result is negative zero.</li>
      * </ul>
      *
-     * <p>Note that the value of {@code Math.ceil(x)} is exactly the value of {@code -Math.floor(-x)}.
+     * Note that the value of {@code Math.ceil(x)} is exactly the value of {@code -Math.floor(-x)}.
      *
      * @param value A value.
      * @return The smallest (closest to negative infinity) floating-point value that is greater than or equal to the
@@ -308,7 +308,7 @@ public interface math {
      * Returns the smallest (closest to negative infinity) {@code float} value that is greater than or equal to the
      * argument and is equal to a mathematical integer.
      *
-     * <p>Special Cases:
+     * Special Cases:
      * <ul>
      *     <li>If the argument value is already equal to a mathematical integer, then the result is the same as the
      *     argument.</li>
@@ -317,7 +317,7 @@ public interface math {
      *     <li>If the argument value is less than zero but greater than -1.0, then the result is negative zero.</li>
      * </ul>
      *
-     * <p>Note that the value of {@code Math.ceil(x)} is exactly the value of {@code -Math.floor(-x)}.
+     * Note that the value of {@code Math.ceil(x)} is exactly the value of {@code -Math.floor(-x)}.
      *
      * @param value A value.
      * @return The smallest (closest to negative infinity) floating-point value that is greater than or equal to the
@@ -336,7 +336,7 @@ public interface math {
     /**
      * Returns the closest {@code long} to the argument, with ties rounding to positive infinity.
      *
-     * <p>Special Cases:
+     * Special Cases:
      * <ul>
      *     <li>If the argument is {@code NaN}, the result is {@code 0}.</li>
      *     <li>If the argument is negative infinity or any value less than or equal to the value of
@@ -357,7 +357,7 @@ public interface math {
     /**
      * Returns the closest {@code int} to the argument, with ties rounding to positive infinity.
      *
-     * <p>Special Cases:
+     * Special Cases:
      * <ul>
      *     <li>If the argument is {@code NaN}, the result is 0.</li>
      *     <li>If the argument is negative infinity or any value less than or equal to the value of
@@ -384,7 +384,9 @@ public interface math {
      *     <li>If the argument is not negative, the argument is returned.</li>
      *     <li>If the argument is negative, the negation of the argument is returned.</li>
      * </ul>
-     * <p/><br/>Special Cases:
+     * 
+     * <br/>
+     * Special Cases:
      * <ul>
      *     <li>If the argument is positive zero or negative zero, the result is positive zero.</li>
      *     <li>If the argument is infinite, the result is positive infinity.</li>
@@ -407,7 +409,9 @@ public interface math {
      *     <li>If the argument is not negative, the argument is returned.</li>
      *     <li>If the argument is negative, the negation of the argument is returned.</li>
      * </ul>
-     * <p/><br/>Special Cases:
+     * 
+     * <br/>
+     * Special Cases:
      * <ul>
      *     <li>If the argument is positive zero or negative zero, the result is positive zero.</li>
      *     <li>If the argument is infinite, the result is positive infinity.</li>
@@ -430,7 +434,9 @@ public interface math {
      *     <li>If the argument is not negative, the argument is returned.</li>
      *     <li>If the argument is negative, the negation of the argument is returned.</li>
      * </ul>
-     * <p/><br/>Special Cases:
+     * 
+     * <br/>
+     * Special Cases:
      * <ul>
      *     <li>If the argument is positive zero or negative zero, the result is positive zero.</li>
      *     <li>If the argument is infinite, the result is positive infinity.</li>
@@ -453,7 +459,9 @@ public interface math {
      *     <li>If the argument is not negative, the argument is returned.</li>
      *     <li>If the argument is negative, the negation of the argument is returned.</li>
      * </ul>
-     * <p/><br/>Special Cases:
+     * 
+     * <br/>
+     * Special Cases:
      * <ul>
      *     <li>If the argument is positive zero or negative zero, the result is positive zero.</li>
      *     <li>If the argument is infinite, the result is positive infinity.</li>
@@ -497,13 +505,15 @@ public interface math {
      * The inverse square root algorithm as imagined by the Quake III developers.
      *
      * <h6>Explanation:</h6>
-     * <p/>The magic of the code, even if you can't follow it, stands out as the {@code i = 0x5f3759df - (i>>1);} line.
+     * 
+     * The magic of the code, even if you can't follow it, stands out as the {@code i = 0x5f3759df - (i>>1);} line.
      * Simplified, Newton-Raphson is an approximation that starts off with a guess and refines it with iteration.
      * Taking advantage of the nature of 32-bit x86 processors, {@code i}, an {@code int}, is initially set to the value
      * of the floating point number you want to take the inverse square of, using an integer cast. {@code i} is then set
      * to {@code 0x5f3759df}, minus itself shifted one bit to the right. The right shift drops the least significant bit
      * of {@code i}, essentially halving it.<br/><br/>
-     * <p/>Using the integer cast of the seeded value, {@code i} is reused and the initial guess for Newton is
+     * 
+     * Using the integer cast of the seeded value, {@code i} is reused and the initial guess for Newton is
      * calculated using the magic seed value minus a free divide by 2 courtesy of the CPU.<br/><br/>
      *
      * <h6>Sources:</h6>
@@ -526,13 +536,15 @@ public interface math {
      * The inverse square root algorithm as imagined by the Quake III developers.
      *
      * <h6>Explanation:</h6>
-     * <p/>The magic of the code, even if you can't follow it, stands out as the {@code i = 0x5f3759df - (i>>1);} line.
+     * 
+     * The magic of the code, even if you can't follow it, stands out as the {@code i = 0x5f3759df - (i>>1);} line.
      * Simplified, Newton-Raphson is an approximation that starts off with a guess and refines it with iteration.
      * Taking advantage of the nature of 32-bit x86 processors, {@code i}, an {@code int}, is initially set to the value
      * of the floating point number you want to take the inverse square of, using an integer cast. {@code i} is then set
      * to {@code 0x5f3759df}, minus itself shifted one bit to the right. The right shift drops the least significant bit
      * of {@code i}, essentially halving it.<br/><br/>
-     * <p/>Using the integer cast of the seeded value, {@code i} is reused and the initial guess for Newton is
+     * 
+     * Using the integer cast of the seeded value, {@code i} is reused and the initial guess for Newton is
      * calculated using the magic seed value minus a free divide by 2 courtesy of the CPU.<br/><br/>
      *
      * <h6>Sources:</h6>
@@ -563,7 +575,7 @@ public interface math {
      *     <li>If the argument is positive infinity, then the result is positive infinity.</li>
      *     <li>If the argument is positive zero or negative zero, then the result is the same as the argument.</li>
      * </ul>
-     * <p>
+     * 
      * Otherwise, the result is the {@code double} value closest to the true mathematical square root of the argument
      * value.
      *
@@ -685,7 +697,7 @@ public interface math {
      * <li>If the argument is zero, then the result is a zero with the
      * same sign as the argument.</ul>
      *
-     * <p>The computed result must be within 1 ulp of the exact result.
+     * The computed result must be within 1 ulp of the exact result.
      * Results must be semi-monotonic.
      *
      * @param a an angle, in radians.
@@ -702,7 +714,7 @@ public interface math {
      * <li>If the argument is zero, then the result is {@code 1.0}.
      * </ul>
      *
-     * <p>The computed result must be within 1 ulp of the exact result.
+     * The computed result must be within 1 ulp of the exact result.
      * Results must be semi-monotonic.
      *
      * @param a an angle, in radians.
@@ -719,7 +731,7 @@ public interface math {
      * <li>If the argument is zero, then the result is a zero with the
      * same sign as the argument.</ul>
      *
-     * <p>The computed result must be within 1 ulp of the exact result.
+     * The computed result must be within 1 ulp of the exact result.
      * Results must be semi-monotonic.
      *
      * @param a an angle, in radians.
@@ -737,7 +749,7 @@ public interface math {
      * <li>If the argument is zero, then the result is a zero with the
      * same sign as the argument.</ul>
      *
-     * <p>The computed result must be within 1 ulp of the exact result.
+     * The computed result must be within 1 ulp of the exact result.
      * Results must be semi-monotonic.
      *
      * @param a the value whose arc sine is to be returned.
@@ -755,7 +767,7 @@ public interface math {
      * <li>If the argument is {@code 1.0}, the result is positive zero.
      * </ul>
      *
-     * <p>The computed result must be within 1 ulp of the exact result.
+     * The computed result must be within 1 ulp of the exact result.
      * Results must be semi-monotonic.
      *
      * @param a the value whose arc cosine is to be returned.
@@ -776,7 +788,7 @@ public interface math {
      * same sign as the input.
      * </ul>
      *
-     * <p>The computed result must be within 1 ulp of the exact result.
+     * The computed result must be within 1 ulp of the exact result.
      * Results must be semi-monotonic.
      *
      * @param a the value whose arc tangent is to be returned.

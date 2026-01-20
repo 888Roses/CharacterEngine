@@ -74,6 +74,7 @@ public interface BlockIndex {
         return block;
     }
 
+
     static Block registerWithItem(String identifier, BlockFactory factory, AbstractBlock.Settings settings, Item.Settings itemSettings) {
         return registerWithItem(Geode.id(identifier), factory, settings, itemSettings);
     }

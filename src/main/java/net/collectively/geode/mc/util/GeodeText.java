@@ -35,6 +35,7 @@ public class GeodeText {
     public GeodeText literal(Object text) {
         return literal(Text.literal(String.valueOf(text)));
     }
+
     public GeodeText literal(Object text, Formatting formatting) {
         return literal(text).withFormatting(formatting);
     }
@@ -54,8 +55,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the color provided and all other attributes of
-     * this style.
+     * Returns a new style with the color provided and all other attributes of this style.
      *
      * @param color the new color
      */
@@ -64,8 +64,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the color provided and all other attributes of
-     * this style.
+     * Returns a new style with the color provided and all other attributes of this style.
      *
      * @param color the new color
      */
@@ -86,16 +85,14 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the bold attribute provided and all other
-     * attributes of this style.
+     * Returns a new style with the bold attribute provided and all other attributes of this style.
      */
     public GeodeText withBold(@Nullable Boolean bold) {
         return modifyStyle(style -> style.withBold(bold));
     }
 
     /**
-     * Returns a new style with the italic attribute provided and all other
-     * attributes of this style.
+     * Returns a new style with the italic attribute provided and all other attributes of this style.
      *
      * @param italic the new italic property
      */
@@ -104,8 +101,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the underline attribute provided and all other
-     * attributes of this style.
+     * Returns a new style with the underline attribute provided and all other attributes of this style.
      */
     public GeodeText withUnderline(@Nullable Boolean underline) {
         return modifyStyle(style -> style.withUnderline(underline));
@@ -120,8 +116,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the click event provided and all other
-     * attributes of this style.
+     * Returns a new style with the click event provided and all other attributes of this style.
      *
      * @param clickEvent the new click event
      */
@@ -130,8 +125,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the hover event provided and all other
-     * attributes of this style.
+     * Returns a new style with the hover event provided and all other attributes of this style.
      *
      * @param hoverEvent the new hover event
      */
@@ -140,8 +134,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the insertion provided and all other
-     * attributes of this style.
+     * Returns a new style with the insertion provided and all other attributes of this style.
      *
      * @param insertion the new insertion string
      */
@@ -150,16 +143,14 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the font provided and all other
-     * attributes of this style.
+     * Returns a new style with the font provided and all other attributes of this style.
      */
     public GeodeText withFont(@Nullable StyleSpriteSource font) {
         return modifyStyle(style -> style.withFont(font));
     }
 
     /**
-     * Returns a new style with the formatting provided and all other
-     * attributes of this style.
+     * Returns a new style with the formatting provided and all other attributes of this style.
      *
      * @param formatting the new formatting
      */
@@ -168,12 +159,10 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the formatting provided and some applicable
-     * attributes of this style.
+     * Returns a new style with the formatting provided and some applicable attributes of this style.
      *
      * <p>When a color formatting is passed for {@code formatting}, the other
-     * formattings, including bold, italic, strikethrough, underlined, and
-     * obfuscated, are all removed.
+     * formattings, including bold, italic, strikethrough, underlined, and obfuscated, are all removed.
      *
      * @param formatting the new formatting
      */
@@ -182,8 +171,7 @@ public class GeodeText {
     }
 
     /**
-     * Returns a new style with the formattings provided and all other
-     * attributes of this style.
+     * Returns a new style with the formattings provided and all other attributes of this style.
      *
      * @param formattings an array of new formattings
      */
