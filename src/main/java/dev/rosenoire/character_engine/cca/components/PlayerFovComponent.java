@@ -1,7 +1,7 @@
 package dev.rosenoire.character_engine.cca.components;
 
 import dev.rosenoire.character_engine.cca.ModEntityComponentIndex;
-import net.collectively.geode.cca.components.impl.PlayerEntityComponent;
+import net.collectively.geode.cardinal_components_api.foundation.PlayerEntityComponent;
 import net.collectively.geode.core.math;
 import net.collectively.geode.core.types.double3;
 import net.collectively.geode.mc.util.EntityHelper;

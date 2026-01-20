@@ -1,19 +1,16 @@
 package dev.rosenoire.character_engine.cca.components;
 
 import dev.rosenoire.character_engine.cca.ModEntityComponentIndex;
-import net.collectively.geode.cca.components.impl.PlayerEntityComponent;
+import net.collectively.geode.cardinal_components_api.foundation.PlayerEntityComponent;
 import net.collectively.geode.core.math;
 import net.collectively.geode.core.types.double2;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
-
-import java.util.function.UnaryOperator;
 
 public class CameraShakeComponent extends PlayerEntityComponent implements CommonTickingComponent {
     // region Essentials

@@ -1,6 +1,5 @@
-package net.collectively.geode.cca.components.impl;
+package net.collectively.geode.cardinal_components_api.foundation;
 
-import net.collectively.geode.cca.components.EnhancedComponent;
 import net.minecraft.entity.LivingEntity;
 
 /**

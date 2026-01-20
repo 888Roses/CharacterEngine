@@ -2,7 +2,7 @@ package dev.rosenoire.character_engine.cca.components;
 
 import dev.rosenoire.character_engine.cca.ModEntityComponentIndex;
 import dev.rosenoire.character_engine.foundation.item.TickingItem;
-import net.collectively.geode.cca.components.impl.LivingEntityComponent;
+import net.collectively.geode.cardinal_components_api.foundation.LivingEntityComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.storage.ReadView;

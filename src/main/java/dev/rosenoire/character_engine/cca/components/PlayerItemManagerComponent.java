@@ -2,7 +2,7 @@ package dev.rosenoire.character_engine.cca.components;
 
 import dev.rosenoire.character_engine.cca.ModEntityComponentIndex;
 import dev.rosenoire.character_engine.foundation.item.PlayerStackChangeCallback;
-import net.collectively.geode.cca.components.impl.PlayerEntityComponent;
+import net.collectively.geode.cardinal_components_api.foundation.PlayerEntityComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.storage.ReadView;

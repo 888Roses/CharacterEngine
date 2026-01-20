@@ -1,4 +1,4 @@
-package net.collectively.geode.cca.components;
+package net.collectively.geode.cardinal_components_api.foundation;
 
 import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
