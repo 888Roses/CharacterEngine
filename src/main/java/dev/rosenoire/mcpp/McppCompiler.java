@@ -11,7 +11,7 @@ import java.util.List;
 
 public class McppCompiler {
     public static void compileFunction(Path function, Path outDirectory) throws IOException {
-        Identifier functionIdentifier = IdentifierHelper.parsePath(function, "function/", false);
+        Identifier functionIdentifier = IdentifierHelper.parsePath(function, "mcpp/", false);
 
         if (functionIdentifier == null) {
             System.out.printf("Function identifier is null for function: '%s'!%n", function);
@@ -22,8 +22,9 @@ public class McppCompiler {
 
         // If this function doesn't use MCPP, we can simply copy the file without doing anything special to it.
         if (!Utils.validateMcppFile(functionContent)) {
-            Path outPath = outDirectory.resolve(function.getFileName());
+            Path outPath = outDirectory.resolve(functionIdentifier.getPath() + ".mcfunction");
             System.out.printf("File '%s' was detected as not using MCPP. Copying at: '%s'...%n", function, outPath);
+            if (!Files.exists(outPath.getParent())) Files.createDirectory(outPath.getParent());
             Files.copy(function, outPath);
             return;
         }
@@ -32,9 +33,8 @@ public class McppCompiler {
 
         // Writing every method files.
         for (McppMethod mcppMethod : extractMethodDefinitions(functionIdentifier, functionContent)) {
-            Path methodPath = outDirectory.resolve(mcppMethod.methodPath(function).getFileName());
             String methodContent = String.join("\n", mcppMethod.content()).strip();
-            Files.writeString(methodPath, methodContent);
+            writeFile(mcppMethod.methodIdentifier(), outDirectory, methodContent);
         }
 
         // Writing the main function file.
@@ -44,7 +44,13 @@ public class McppCompiler {
         cleanedJoinedFunctionFileContent = cleanedJoinedFunctionFileContent
                 .replace("# enable mcpp", "# Compiled by CharacterEngine 2026")
                 .replace("#enable mcpp", "# Compiled by CharacterEngine 2026");
-        Files.writeString(outDirectory.resolve(function.getFileName()), cleanedJoinedFunctionFileContent);
+        writeFile(functionIdentifier, outDirectory, cleanedJoinedFunctionFileContent);
+    }
+
+    private static void writeFile(Identifier identifier, Path outDirectory, String content) throws IOException {
+        Path path = outDirectory.resolve(identifier.getPath() + ".mcfunction");
+        if (!Files.exists(path.getParent())) Files.createDirectory(path.getParent());
+        Files.writeString(path, content);
     }
 
     /// Replaces implicit `method my_method` instructions with explicit function calls to generate method files.
