@@ -1,5 +1,6 @@
 package dev.rosenoire.mcpp;
 
+import net.collectively.geode.core.util.FileHelper;
 import net.collectively.geode.mc.util.IdentifierHelper;
 import net.minecraft.util.Identifier;
 
@@ -22,10 +23,11 @@ public class McppCompiler {
 
         // If this function doesn't use MCPP, we can simply copy the file without doing anything special to it.
         if (!Utils.validateMcppFile(functionContent)) {
-            Path outPath = outDirectory.resolve(functionIdentifier.getPath() + ".mcfunction");
-            System.out.printf("File '%s' was detected as not using MCPP. Copying at: '%s'...%n", function, outPath);
-            if (!Files.exists(outPath.getParent())) Files.createDirectory(outPath.getParent());
-            Files.copy(function, outPath);
+            Path copiedPath = outDirectory.resolve(functionIdentifier.getPath() + ".mcfunction");
+            FileHelper.writeFileParent(copiedPath.getParent());
+            Files.copy(function, copiedPath);
+
+            System.out.printf("File '%s' was detected as not using MCPP. Copying at: '%s'...%n", function, copiedPath);
             return;
         }
 
@@ -34,23 +36,23 @@ public class McppCompiler {
         // Writing every method files.
         for (McppMethod mcppMethod : extractMethodDefinitions(functionIdentifier, functionContent)) {
             String methodContent = String.join("\n", mcppMethod.content()).strip();
+            methodContent = Mcpp.WATERMARK + "\n\n" + methodContent;
             writeFile(mcppMethod.methodIdentifier(), outDirectory, methodContent);
         }
 
         // Writing the main function file.
         List<String> cleanedFunctionFileContent = removeMethodsFromFunctionContent(functionContent);
         String cleanedJoinedFunctionFileContent = String.join("\n", cleanedFunctionFileContent);
-        // Copyright claim
+        // Add watermark at the start of the file.
         cleanedJoinedFunctionFileContent = cleanedJoinedFunctionFileContent
-                .replace("# enable mcpp", "# Compiled by CharacterEngine 2026")
-                .replace("#enable mcpp", "# Compiled by CharacterEngine 2026");
+                .replace("# enable mcpp", Mcpp.WATERMARK)
+                .replace("#enable mcpp", Mcpp.WATERMARK);
         writeFile(functionIdentifier, outDirectory, cleanedJoinedFunctionFileContent);
     }
 
     private static void writeFile(Identifier identifier, Path outDirectory, String content) throws IOException {
         Path path = outDirectory.resolve(identifier.getPath() + ".mcfunction");
-        if (!Files.exists(path.getParent())) Files.createDirectory(path.getParent());
-        Files.writeString(path, content);
+        FileHelper.writeFileSafe(path, content);
     }
 
     /// Replaces implicit `method my_method` instructions with explicit function calls to generate method files.

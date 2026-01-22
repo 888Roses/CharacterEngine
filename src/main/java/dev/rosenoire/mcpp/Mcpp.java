@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class Mcpp {
+    public static final String WATERMARK = "# Compiled by CharacterEngine 2026";
     public static final Path ROOT_DATA = Path.of("C:/dev/java/CharacterEngine/src/main/resources/data/");
 
     public static void main(String[] params) throws IOException {

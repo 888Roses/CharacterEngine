@@ -51,6 +51,21 @@ public interface FileHelper {
         }
     }
 
+    static void writeFileParent(Path path) throws IOException {
+        if (path.getParent() != null && !Files.exists(path.getParent())) {
+            writeFileParent(path.getParent());
+        }
+
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
+    }
+
+    static void writeFileSafe(Path path, String content) throws IOException {
+        writeFileParent(path.getParent());
+        Files.writeString(path, content);
+    }
+
     class DeepListFileVisitor extends SimpleFileVisitor<Path> {
         public final Consumer<Path> onValidFileFound;
         public final Predicate<Path> validateFile;
