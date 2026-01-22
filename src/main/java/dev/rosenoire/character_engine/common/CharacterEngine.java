@@ -1,5 +1,6 @@
 package dev.rosenoire.character_engine.common;
 
+import dev.rosenoire.character_engine.common.index.ModCommands;
 import dev.rosenoire.character_engine.common.index.*;
 import dev.rosenoire.character_engine.foundation.index.FoundationCallbacks;
 import net.collectively.geode.Geode;
@@ -17,6 +18,9 @@ public class CharacterEngine implements ModInitializer {
         return Identifier.of(MOD_ID, identifier);
     }
 
+    /// When verbose, commands and other in-game events log messages in chat.
+    public static boolean isVerbose = true;
+
     @Override
     public void onInitialize() {
         Geode.setHookedMod(MOD_ID);
@@ -28,9 +32,11 @@ public class CharacterEngine implements ModInitializer {
         ModParticleIndex.initialize();
 
         ModItemIndex.initialize();
+        ModCommands.initialize();
 
         ModCommonPayloadIndex.registerAll();
         ModCommonCallbackIndex.subscribeCallbacks();
+
 
         // MUST BE AT THE END OTHERWISE THE WORLD CRUMBLES.
         FoundationCallbacks.subscribe();

@@ -20,7 +20,8 @@
       "dev.rosenoire.character_engine.common.CharacterEngine"
     ],
     "cardinal-components-entity": [
-      "dev.rosenoire.character_engine.cca.ModEntityComponentIndex"
+      "dev.rosenoire.character_engine.cca.ModEntityComponentIndex",
+      "net.collectively.geode.cardinal_components_api._internal.GeodeEntityComponentIndex"
     ]
   },
   "mixins": [
@@ -33,7 +34,9 @@
       "character_engine:player_actions",
       "character_engine:ticking_items",
       "character_engine:player_fov",
-      "character_engine:camera_shake"
+      "character_engine:camera_shake",
+
+      "geode:player_camera_shake"
     ]
   },
   "depends": {

@@ -26,16 +26,11 @@ public class ModEntityComponentIndex implements EntityComponentInitializer {
             CharacterEngine.id("player_fov"), PlayerFovComponent.class
     );
 
-    public static final ComponentKey<CameraShakeComponent> CAMERA_SHAKE = ComponentRegistry.getOrCreate(
-            CharacterEngine.id("camera_shake"), CameraShakeComponent.class
-    );
-
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, ITEM_MANAGER, PlayerItemManagerComponent::new);
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, ACTIONS, PlayerActionsComponent::new);
         entityComponentFactoryRegistry.registerFor(PlayerEntity.class, PLAYER_FOV, PlayerFovComponent::new);
         entityComponentFactoryRegistry.registerFor(LivingEntity.class, TICKING_ITEM, TickingItemComponent::new);
-        entityComponentFactoryRegistry.registerFor(PlayerEntity.class, CAMERA_SHAKE, CameraShakeComponent::new);
     }
 }
