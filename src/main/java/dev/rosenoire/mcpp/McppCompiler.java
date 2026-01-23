@@ -121,7 +121,7 @@ public class McppCompiler {
             // Replacing method calls at the start of a line.
             if (line.startsWith("method ")) {
                 String address = line.replaceFirst("method ", "").strip();
-                address = Utils.getMethodIdentifier(functionIdentifier, address).withPrefixedPath("compiled/").toString();
+                address = Utils.getMethodIdentifier(functionIdentifier, address).toString();
 
                 line = "function %s".formatted(address);
                 functionContent.set(i, line);
@@ -133,7 +133,7 @@ public class McppCompiler {
             if (methodIndex > -1) {
                 String subLine = line.substring(methodIndex + "run method ".length());
                 String address = subLine.split(" ")[0];
-                address = Utils.getMethodIdentifier(functionIdentifier, address).withPrefixedPath("compiled/").toString();
+                address = Utils.getMethodIdentifier(functionIdentifier, address).toString();
 
                 line = line.substring(0, methodIndex) + "run function " + address;
                 functionContent.set(i, line);
