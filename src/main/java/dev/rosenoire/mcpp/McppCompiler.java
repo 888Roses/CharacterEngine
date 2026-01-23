@@ -1,5 +1,6 @@
 package dev.rosenoire.mcpp;
 
+import net.collectively.geode.core.math;
 import net.collectively.geode.core.util.FileHelper;
 import net.collectively.geode.mc.util.IdentifierHelper;
 import net.minecraft.util.Identifier;
@@ -8,7 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class McppCompiler {
     public static void compileFunction(Path function, Path outDirectory) throws IOException {
@@ -19,7 +22,7 @@ public class McppCompiler {
             return;
         }
 
-        List<String> functionContent = Files.readAllLines(function);
+        List<String> functionContent = new ArrayList<>(Files.readAllLines(function));
 
         // If this function doesn't use MCPP, we can simply copy the file without doing anything special to it.
         if (!Utils.validateMcppFile(functionContent)) {
@@ -30,6 +33,9 @@ public class McppCompiler {
             System.out.printf("File '%s' was detected as not using MCPP. Copying at: '%s'...%n", function, copiedPath);
             return;
         }
+
+        Map<String, String> memory = retrieveConstants(functionContent, new HashMap<>());
+        makeConstantsExplicit(functionContent, memory);
 
         replaceImplicitMethodCalls(functionIdentifier, functionContent);
 
@@ -48,6 +54,45 @@ public class McppCompiler {
                 .replace("# enable mcpp", Mcpp.WATERMARK)
                 .replace("#enable mcpp", Mcpp.WATERMARK);
         writeFile(functionIdentifier, outDirectory, cleanedJoinedFunctionFileContent);
+    }
+
+    private static void makeConstantsExplicit(List<String> functionContent, Map<String, String> memory) {
+        for (Map.Entry<String, String> entry : memory.entrySet()) {
+            String name = entry.getKey();
+            String value = entry.getValue();
+
+            functionContent.replaceAll(line -> line.replace("@" + name, value));
+        }
+    }
+
+    private static Map<String, String> retrieveConstants(List<String> functionContent, Map<String, String> memory) {
+        List<String> temp = new ArrayList<>(functionContent);
+        for (int i = 0; i < temp.size(); i++) {
+            String line = temp.get(i).strip();
+
+            if (line.startsWith("const")) {
+                String subLine = line.substring("const ".length());
+
+                int separatorLength = 2;
+                int separatorIndex = subLine.indexOf("->");
+
+                if (separatorIndex == -1) {
+                    separatorIndex = subLine.indexOf(":");
+                    separatorLength = 1;
+                }
+                if (separatorIndex == -1) {
+                    separatorIndex = subLine.indexOf("=");
+                    separatorLength = 1;
+                }
+
+                String constantName = subLine.substring(0, separatorIndex).strip();
+                String constantValue = subLine.substring(separatorIndex + separatorLength).strip();
+                memory.put(constantName, constantValue);
+                functionContent.remove(i);
+            }
+        }
+
+        return memory;
     }
 
     private static void writeFile(Identifier identifier, Path outDirectory, String content) throws IOException {
