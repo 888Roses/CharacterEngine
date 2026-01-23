@@ -23,9 +23,6 @@ public interface RaymarchCommand {
 
     static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, commandRegistryAccess, registrationEnvironment) -> {
-            // Code taken from the ExecuteCommand class, the literalCommandNode allows for redirecting back to the start of
-            // the command chain, i.e. allowing for a "run" instruction to execute another command in this one.
-            LiteralCommandNode<ServerCommandSource> literalCommandNode = dispatcher.register(CommandManager.literal("execute"));
             dispatcher.register(CommandManager
                     .literal("execute").then(CommandManager
                             .literal("raymarch").then(CommandManager
