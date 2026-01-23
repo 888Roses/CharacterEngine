@@ -35,39 +35,38 @@ public interface ShakeCommand {
     );
 
     static void register() {
-        CommandRegistrationCallback.EVENT.register(
-                (commandDispatcher, commandRegistryAccess, registrationEnvironment) -> commandDispatcher.register(
-                        CommandManager.literal("shake")
-                                .then(CommandManager.literal("stop").executes(ShakeCommand::stopCameraShake))
-                                .then(CommandManager.literal("add").then(CommandManager
-                                                .argument(CNG_CAMERA_SHAKE_INTENSITY, DoubleArgumentType.doubleArg(0)).then(CommandManager
-                                                        .argument(CNG_CAMERA_SHAKE_DURATION, LongArgumentType.longArg(1))
+        CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> commandDispatcher.register(CommandManager
+                        .literal("shake")
+                        .then(CommandManager.literal("stop").executes(ShakeCommand::stopCameraShake))
+                        .then(CommandManager.literal("add").then(CommandManager
+                                        .argument(CNG_CAMERA_SHAKE_INTENSITY, DoubleArgumentType.doubleArg(0)).then(CommandManager
+                                                .argument(CNG_CAMERA_SHAKE_DURATION, LongArgumentType.longArg(1))
+                                                .executes(ctx -> {
+                                                    double intensity = DoubleArgumentType.getDouble(ctx, CNG_CAMERA_SHAKE_INTENSITY);
+                                                    long duration = LongArgumentType.getLong(ctx, CNG_CAMERA_SHAKE_DURATION);
+                                                    return cameraShake(ctx, intensity, duration, "linear");
+                                                }).then(CommandManager
+                                                        .argument(CNG_CAMERA_SHAKE_EASING_FUNCTION, StringArgumentType.word())
+                                                        .suggests(SuggestionProviders.cast(EASING_FUNCTION_PROVIDER))
                                                         .executes(ctx -> {
                                                             double intensity = DoubleArgumentType.getDouble(ctx, CNG_CAMERA_SHAKE_INTENSITY);
                                                             long duration = LongArgumentType.getLong(ctx, CNG_CAMERA_SHAKE_DURATION);
-                                                            return cameraShake(ctx, intensity, duration, "linear");
-                                                        }).then(CommandManager
-                                                                .argument(CNG_CAMERA_SHAKE_EASING_FUNCTION, StringArgumentType.word())
-                                                                .suggests(SuggestionProviders.cast(EASING_FUNCTION_PROVIDER))
-                                                                .executes(ctx -> {
-                                                                    double intensity = DoubleArgumentType.getDouble(ctx, CNG_CAMERA_SHAKE_INTENSITY);
-                                                                    long duration = LongArgumentType.getLong(ctx, CNG_CAMERA_SHAKE_DURATION);
-                                                                    String easingFunctionName = StringArgumentType.getString(ctx, CNG_CAMERA_SHAKE_EASING_FUNCTION);
-                                                                    return cameraShake(ctx, intensity, duration, easingFunctionName);
-                                                                })
-                                                        )
+                                                            String easingFunctionName = StringArgumentType.getString(ctx, CNG_CAMERA_SHAKE_EASING_FUNCTION);
+                                                            return cameraShake(ctx, intensity, duration, easingFunctionName);
+                                                        })
                                                 )
                                         )
                                 )
-                                .then(CommandManager.literal("get")
-                                        .then(CommandManager.literal("intensity").then(CommandManager.argument("scale", DoubleArgumentType.doubleArg(1)).executes(ShakeCommand::getIntensity)))
-                                        .then(CommandManager.literal("duration").executes(ShakeCommand::getDuration))
-                                        .then(CommandManager.literal("is_shaking").executes(ShakeCommand::getIsShaking))
-                                        .then(CommandManager.literal("shake_vector")
-                                                .then(CommandManager.literal("x").then(CommandManager.argument("scale", DoubleArgumentType.doubleArg(1)).executes(ShakeCommand::getShakeVectorX)))
-                                                .then(CommandManager.literal("y").then(CommandManager.argument("scale", DoubleArgumentType.doubleArg(1)).executes(ShakeCommand::getShakeVectorY)))
-                                        )
+                        )
+                        .then(CommandManager.literal("get")
+                                .then(CommandManager.literal("intensity").then(CommandManager.argument("scale", DoubleArgumentType.doubleArg(1)).executes(ShakeCommand::getIntensity)))
+                                .then(CommandManager.literal("duration").executes(ShakeCommand::getDuration))
+                                .then(CommandManager.literal("is_shaking").executes(ShakeCommand::getIsShaking))
+                                .then(CommandManager.literal("shake_vector")
+                                        .then(CommandManager.literal("x").then(CommandManager.argument("scale", DoubleArgumentType.doubleArg(1)).executes(ShakeCommand::getShakeVectorX)))
+                                        .then(CommandManager.literal("y").then(CommandManager.argument("scale", DoubleArgumentType.doubleArg(1)).executes(ShakeCommand::getShakeVectorY)))
                                 )
+                        )
                 )
         );
     }

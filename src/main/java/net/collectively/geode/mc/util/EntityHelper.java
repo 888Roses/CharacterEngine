@@ -58,19 +58,19 @@ public interface EntityHelper {
         return new double3(entity.getEntityPos()).add(0, entity.getStandingEyeHeight() / 2d, 0);
     }
 
-    static List<Entity> getEntitiesAround(Entity entity, float radius) {
+    static List<Entity> getEntitiesAround(Entity entity, double radius) {
         return getEntitiesAround(entity, radius, ent -> true);
     }
 
-    static List<Entity> getEntitiesAround(Entity entity, float radius, Predicate<Entity> check) {
+    static List<Entity> getEntitiesAround(Entity entity, double radius, Predicate<Entity> check) {
         return getEntitiesAround(entity, entity.getEntityWorld(), new double3(entity.getEntityPos()), radius, ent -> true);
     }
 
-    static List<Entity> getEntitiesAround(@Nullable Entity entity, World world, double3 point, float radius) {
+    static List<Entity> getEntitiesAround(@Nullable Entity entity, World world, double3 point, double radius) {
         return getEntitiesAround(entity, world, point, radius, ent -> true);
     }
 
-    static List<Entity> getEntitiesAround(@Nullable Entity entity, World world, double3 point, float radius, Predicate<Entity> check) {
+    static List<Entity> getEntitiesAround(@Nullable Entity entity, World world, double3 point, double radius, Predicate<Entity> check) {
         final var buffer = new ArrayList<Entity>();
         final var box = Box.of(point.toVec3d(), radius, radius, radius);
         final var squaredRadius = radius * radius;

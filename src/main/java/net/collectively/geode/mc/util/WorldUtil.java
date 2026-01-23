@@ -1,16 +1,26 @@
 package net.collectively.geode.mc.util;
 
+import net.collectively.geode.core.math;
 import net.collectively.geode.core.types.double3;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 public interface WorldUtil {
     static void addParticleClient(
@@ -50,34 +60,104 @@ public interface WorldUtil {
         world.createExplosion(entity, pos.x(), pos.y(), pos.z(), power, type);
     }
 
-    static HitResult raycast(Entity sourceEntity, double distance) {
-        var sqrDst = distance * distance;
-        var eyePos = sourceEntity.getEyePos();
+    static @Nullable Entity raymarchToClosest(World world,
+                                              Entity sourceEntity,
+                                              double3 startPosition,
+                                              int stepCount,
+                                              double stepSize,
+                                              double baseRadius,
+                                              double stepRadius) {
+        double3 forward = new double3(sourceEntity.getRotationVector());
 
-        var endPos = sourceEntity.getEyePos().add(sourceEntity.getRotationVector().multiply(distance));
-        var blockHit = sourceEntity.getEntityWorld().raycast(new RaycastContext(
-                sourceEntity.getEyePos(),
-                endPos,
+        Entity closestEntity = null;
+        double closestDistance = Double.MAX_VALUE;
+
+        for (int i = 0; i < stepCount; i++) {
+            double3 pos = startPosition.add(forward.mul(stepSize * i));
+            double radius = baseRadius + i * stepRadius;
+
+            List<Entity> entities = EntityHelper.getEntitiesAround(sourceEntity, world, pos, radius);
+            for (Entity entity : entities) {
+                double distance = entity.getEntityPos().distanceTo(pos.toVec3d());
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestEntity = entity;
+                }
+            }
+        }
+
+        return closestEntity;
+    }
+
+    static List<Entity> raymarch(World world,
+                                 Entity entity,
+                                 double3 startPosition,
+                                 int stepCount,
+                                 double stepSize,
+                                 double baseRadius,
+                                 double stepRadius) {
+
+        List<Entity> entities = new ArrayList<>();
+        double3 forward = new double3(entity.getRotationVector());
+        for (int i = 0; i < stepCount; i++) {
+            double3 pos = startPosition.add(forward.mul(stepSize * i));
+            double radius = baseRadius + i * stepRadius;
+            entities.addAll(EntityHelper.getEntitiesAround(entity, world, pos, radius));
+        }
+
+        return entities;
+    }
+
+    /// WARNING BROKEN
+    static HitResult raycast(World world, Entity entity, double3 startPosition, double3 direction, double distance, Predicate<Entity> validate) {
+        double squareDistance = distance * distance;
+        double3 endPosition = startPosition.add(direction.mul(distance));
+        BlockHitResult blockHitResult = world.raycast(new RaycastContext(
+                startPosition.toVec3d(),
+                endPosition.toVec3d(),
                 RaycastContext.ShapeType.COLLIDER,
                 RaycastContext.FluidHandling.NONE,
-                sourceEntity
+                entity
         ));
 
-        var blockHitDst = blockHit.getPos().squaredDistanceTo(eyePos);
-        if (blockHit.getType() != HitResult.Type.MISS) {
-            sqrDst = blockHitDst;
-            distance = Math.sqrt(blockHitDst);
+        double blockHitDistance = blockHitResult.getPos().squaredDistanceTo(startPosition.toVec3d());
+        if (blockHitResult.getType() != HitResult.Type.MISS) {
+            squareDistance = blockHitDistance;
+            distance = math.sqrt(blockHitDistance);
         }
 
-        var fwd = sourceEntity.getRotationVector();
-        endPos = eyePos.add(fwd.multiply(distance));
-        var hitBox = sourceEntity.getBoundingBox().stretch(fwd.multiply(distance)).expand(1.0F, 1.0F, 1.0F);
-        var entityHit = ProjectileUtil.raycast(sourceEntity, eyePos, endPos, hitBox, EntityPredicates.CAN_HIT, sqrDst);
+        Box hitbox = entity.getBoundingBox().stretch(direction.mul(distance).toVec3d()).expand(1);
+        EntityHitResult entityHitResult = ProjectileUtil.raycast(
+                entity,
+                startPosition.toVec3d(),
+                endPosition.toVec3d(),
+                hitbox,
+                EntityPredicates.CAN_HIT.and(validate),
+                squareDistance
+        );
 
-        if (entityHit == null || entityHit.getType() == HitResult.Type.MISS || entityHit.getPos().squaredDistanceTo(eyePos) > blockHitDst) {
-            return blockHit;
+        if (entityHitResult == null
+                || entityHitResult.getType() == HitResult.Type.MISS
+                || entityHitResult.getPos().squaredDistanceTo(startPosition.toVec3d()) > blockHitDistance) {
+            return blockHitResult;
         }
 
-        return entityHit;
+        return entityHitResult;
+    }
+
+    /// WARNING BROKEN
+    static HitResult raycast(Entity entity, double distance, Predicate<Entity> validate) {
+        return raycast(
+                entity.getEntityWorld(),
+                entity,
+                new double3(entity.getEyePos()),
+                new double3(entity.getRotationVector()),
+                distance,
+                validate
+        );
+    }
+
+    static HitResult raycast(Entity entity, double distance) {
+        return raycast(entity, distance, hit -> true);
     }
 }
