@@ -132,10 +132,16 @@ public class McppCompiler {
             int methodIndex = line.indexOf("run method ");
             if (methodIndex > -1) {
                 String subLine = line.substring(methodIndex + "run method ".length());
-                String address = subLine.split(" ")[0];
+                String[] tokens = subLine.split(" ");
+                String address = tokens[0];
                 address = Utils.getMethodIdentifier(functionIdentifier, address).toString();
 
-                line = line.substring(0, methodIndex) + "run function " + address;
+                String instruction = "function " + address;
+                if (tokens.length > 1) {
+                    instruction = "schedule function " + address + " " + tokens[1];
+                }
+
+                line = line.substring(0, methodIndex) + "run " +instruction;
                 functionContent.set(i, line);
             }
         }
